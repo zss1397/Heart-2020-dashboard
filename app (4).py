@@ -43,3 +43,19 @@ if not hd_count.empty:
     st.pyplot(fig)
 else:
     st.write("No data available for selected filters.")
+if filtered_df.empty:
+    st.warning("⚠️ No data found for selected filters. Try broadening your selection.")
+else:
+    st.dataframe(filtered_df)
+
+    st.subheader("Heart Disease Prevalence")
+    hd_count = filtered_df["HeartDisease"].value_counts()
+    st.write("With Heart Disease:", int(hd_count.get("Yes", 0)))
+    st.write("Without Heart Disease:", int(hd_count.get("No", 0)))
+
+    st.subheader("Heart Disease Breakdown (Pie Chart)")
+    fig, ax = plt.subplots()
+    ax.pie(hd_count.values, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')
+    st.pyplot(fig)
+
