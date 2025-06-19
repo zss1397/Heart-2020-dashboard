@@ -58,4 +58,28 @@ else:
     ax.pie(hd_count.values, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
     ax.axis('equal')
     st.pyplot(fig)
+# Bar chart: Heart Disease by Sex
+st.subheader("Heart Disease by Sex")
+sex_counts = filtered_df.groupby(["Sex", "HeartDisease"]).size().unstack().fillna(0)
+
+if not sex_counts.empty:
+    fig, ax = plt.subplots()
+    sex_counts.plot(kind="bar", stacked=True, ax=ax, color=["#1f77b4", "#ff7f0e"])
+    ax.set_ylabel("Number of People")
+    ax.set_title("Heart Disease Prevalence by Sex")
+    st.pyplot(fig)
+else:
+    st.info("No data to display for selected filters.")
+# Bar chart: Heart Disease by Sex
+st.subheader("Heart Disease by Sex")
+sex_counts = filtered_df.groupby(["Sex", "HeartDisease"]).size().unstack().fillna(0)
+
+if not sex_counts.empty:
+    fig, ax = plt.subplots()
+    sex_counts.plot(kind="bar", stacked=True, ax=ax, color=["#1f77b4", "#ff7f0e"])
+    ax.set_ylabel("Number of People")
+    ax.set_title("Heart Disease Prevalence by Sex")
+    st.pyplot(fig)
+else:
+    st.info("No data to display for selected filters.")
 
