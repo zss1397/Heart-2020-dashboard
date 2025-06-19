@@ -86,7 +86,7 @@ else:
     # Heart disease summary
 Step-by-Step: Bar Chart by Age Category
 st.subheader("Heart Disease Prevalence in Filtered Data")
-📄 Code to Paste (Bar Chart by Age)
+(Bar Chart by Age)
 # Heart Disease by Age Category
 st.subheader("Heart Disease by Age Category")
 
