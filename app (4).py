@@ -82,4 +82,20 @@ if not sex_counts.empty:
     st.pyplot(fig)
 else:
     st.info("No data to display for selected filters.")
+    # Heart disease summary
+✅ Step-by-Step: Bar Chart by Age Category
+st.subheader("Heart Disease Prevalence in Filtered Data")
+📄 Code to Paste (Bar Chart by Age)
+# Heart Disease by Age Category
+st.subheader("Heart Disease by Age Category")
+
+age_counts = filtered_df.groupby(["AgeCategory", "HeartDisease"]).size().unstack().fillna(0)
+
+if not age_counts.empty:
+    age_counts = age_counts.loc[age_counts.sum(axis=1).sort_index()]  # keep logical age order
+    fig, ax = plt.subplots(figsize=(8, 5))
+    age_counts.plot(kind="bar", stacked=True, ax=ax, color=["#1f77b4", "#ff7f0e"])
+    ax.set_ylabel("Number of People")
+    ax.set_title("Heart Disease Prevalence by Age")
+    st.pyplot(fig)
 
