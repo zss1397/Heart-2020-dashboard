@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Load data
-df = pd.read_csv("heart_2020_cleaned.csv")
+df = pd.read_csv("heart_2020_cleaned (1).csv")
 
 # Title
 st.title("Heart Disease Indicators Dashboard (2020)")
