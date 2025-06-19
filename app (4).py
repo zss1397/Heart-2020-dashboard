@@ -84,7 +84,7 @@ if not sex_counts.empty:
 else:
     st.info("No data to display for selected filters.")
     # Heart disease summary
-✅ Step-by-Step: Bar Chart by Age Category
+Step-by-Step: Bar Chart by Age Category
 st.subheader("Heart Disease Prevalence in Filtered Data")
 📄 Code to Paste (Bar Chart by Age)
 # Heart Disease by Age Category
