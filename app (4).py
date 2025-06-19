@@ -98,4 +98,23 @@ if not age_counts.empty:
     ax.set_ylabel("Number of People")
     ax.set_title("Heart Disease Prevalence by Age")
     st.pyplot(fig)
+# Heart Disease by Age Category
+st.subheader("Heart Disease by Age Category")
+
+age_counts = filtered_df.groupby(["AgeCategory", "HeartDisease"]).size().unstack().fillna(0)
+
+if not age_counts.empty:
+    # To keep age order logical
+    age_order = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49',
+                 '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80 or older']
+    age_counts = age_counts.reindex(age_order).dropna(how='all')
+    
+    fig, ax = plt.subplots(figsize=(10, 5))
+    age_counts.plot(kind="bar", stacked=True, ax=ax, color=["#1f77b4", "#ff7f0e"])
+    ax.set_ylabel("Number of People")
+    ax.set_title("Heart Disease Prevalence by Age Group")
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
+else:
+    st.write("No data available for selected filters.")
 
