@@ -21,6 +21,7 @@ filtered_df = df[
     (df["AgeCategory"].isin(age)) &
     (df["Race"].isin(race))
 ]
+st.write("Filtered dataset size:", filtered_df.shape)
 
 # Display filtered data
 st.subheader("Filtered Data")
