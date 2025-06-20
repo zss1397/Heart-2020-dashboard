@@ -24,7 +24,9 @@ st.dataframe(df.head())
 st.subheader("Heart Disease Pie Chart")
 hd_count = df["HeartDisease"].value_counts()
 st.write("**HeartDisease count:**")
-st.dataframe(hd_count.reset_index(names=["HeartDisease", "Count"]))
+hd_df = hd_count.reset_index()
+hd_df.columns = ["HeartDisease", "Count"]
+st.dataframe(hd_df)
 
 fig1, ax1 = plt.subplots()
 ax1.pie(hd_count.values, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
