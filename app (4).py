@@ -204,3 +204,29 @@ if not genhealth_counts.empty:
     st.pyplot(fig)
 else:
     st.info("No data available for General Health.")
+# ===============================
+# 📊 Key Indicators (All Data, Not Filtered)
+# ===============================
+st.markdown("### 🗂️ Key Indicators (All Data)")
+
+col1, col2, col3 = st.columns(3)
+col4, col5, col6 = st.columns(3)
+
+with col1:
+    st.metric("Total Patients", f"{len(df):,}")
+with col2:
+    heart_disease_pct = (df["HeartDisease"] == "Yes").mean() * 100
+    st.metric("Heart Disease %", f"{heart_disease_pct:.1f}%")
+with col3:
+    avg_sleep = df["SleepTime"].mean()
+    st.metric("Avg Sleep Time", f"{avg_sleep:.1f} hrs")
+
+with col4:
+    avg_bmi = df["BMI"].mean()
+    st.metric("Avg BMI", f"{avg_bmi:.1f}")
+with col5:
+    smoking_pct = (df["Smoking"] == "Yes").mean() * 100
+    st.metric("Smoking Rate", f"{smoking_pct:.1f}%")
+with col6:
+    alcohol_pct = (df["AlcoholDrinking"] == "Yes").mean() * 100
+    st.metric("Alcohol Use Rate", f"{alcohol_pct:.1f}%")
