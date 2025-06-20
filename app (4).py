@@ -260,3 +260,16 @@ st.write(df.describe())
 st.subheader("🧾 Column Info")
 st.write(df.dtypes)
 
+# Heart Disease Pie Chart
+st.header("❤️ Heart Disease Distribution")
+
+hd_counts = df["HeartDisease"].value_counts()
+
+if not hd_counts.empty:
+    fig, ax = plt.subplots()
+    ax.pie(hd_counts.values, labels=hd_counts.index, autopct='%1.1f%%', startangle=90)
+    ax.set_title("Proportion of Heart Disease Cases")
+    ax.axis('equal')  # Equal aspect ratio ensures pie chart is a circle
+    st.pyplot(fig)
+else:
+    st.warning("No heart disease data available.")
