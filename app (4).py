@@ -218,3 +218,20 @@ ax.set_title("General Health Perception by Heart Disease Status")
 ax.set_xlabel("Number of People")
 ax.legend(loc="lower right")
 st.pyplot(fig)
+
+# Histogram of Sleep Time
+st.subheader("🛌 Sleep Time Distribution")
+
+fig, ax = plt.subplots()
+sns.histplot(df["SleepTime"], bins=20, kde=True, color="purple", ax=ax)
+ax.set_title("Distribution of Sleep Time")
+ax.set_xlabel("Hours of Sleep")
+st.pyplot(fig)
+
+# BMI Distribution by Heart Disease
+st.subheader("⚖️ BMI Distribution by Heart Disease Status")
+
+fig, ax = plt.subplots()
+sns.kdeplot(data=df, x="BMI", hue="HeartDisease", fill=True, common_norm=False, alpha=0.4, ax=ax)
+ax.set_title("BMI Distribution by Heart Disease Status")
+st.pyplot(fig)
