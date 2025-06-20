@@ -38,8 +38,9 @@ st.dataframe(filtered_df.head())
 st.markdown("## Heart Disease Pie Chart")
 hd_count = filtered_df["HeartDisease"].value_counts()
 st.write("HeartDisease count:")
-st.dataframe(hd_count.reset_index(names=["HeartDisease", "Count"]))
-
+df_counts = hd_count.reset_index()
+df_counts.columns = ["HeartDisease", "Count"]
+st.dataframe(df_counts)
 
 if not hd_count.empty:
     fig, ax = plt.subplots()
