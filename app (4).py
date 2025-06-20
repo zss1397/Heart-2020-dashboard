@@ -273,3 +273,16 @@ if not hd_counts.empty:
     st.pyplot(fig)
 else:
     st.warning("No heart disease data available.")
+
+# Pie Chart: Heart Disease Distribution (Filtered)
+st.subheader("🧠 Heart Disease Distribution (Pie Chart)")
+
+hd_count = filtered_df["HeartDisease"].value_counts()
+
+if not hd_count.empty:
+    fig, ax = plt.subplots()
+    ax.pie(hd_count, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
+    ax.axis("equal")  # Equal aspect ratio ensures a perfect circle
+    st.pyplot(fig)
+else:
+    st.warning("⚠️ No data available for selected filters to display the pie chart.")
