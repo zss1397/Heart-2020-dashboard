@@ -5,7 +5,9 @@ import seaborn as sns
 import os
 
 st.set_page_config(layout="wide")
-st.title("🫀 Heart Disease Indicators Dashboard (2020)")
+
+# Title
+st.title("❤️ Heart Disease Indicators Dashboard (2020)")
 st.markdown("Analyze risk factors for heart disease using CDC BRFSS 2020 data.")
 
 # Load CSV safely
@@ -18,58 +20,32 @@ if not os.path.exists(csv_filename):
 df = pd.read_csv(csv_filename)
 st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
 
-# Display column names
-with st.expander("🧾 Columns:"):
+# Display column names for reference
+with st.expander("🧾 Columns"):
     st.json({i: col for i, col in enumerate(df.columns)})
 
-# ===============================
-# 📊 Key Indicators (All Data)
-# ===============================
-st.markdown("### 🗂️ Key Indicators (All Data)")
-col1, col2, col3 = st.columns(3)
-col4, col5, col6 = st.columns(3)
-
-with col1:
-    st.metric("Total Patients", f"{len(df):,}")
-with col2:
-    heart_disease_pct = (df["HeartDisease"] == "Yes").mean() * 100
-    st.metric("Heart Disease %", f"{heart_disease_pct:.1f}%")
-with col3:
-    avg_sleep = df["SleepTime"].mean()
-    st.metric("Avg Sleep Time", f"{avg_sleep:.1f} hrs")
-with col4:
-    avg_bmi = df["BMI"].mean()
-    st.metric("Avg BMI", f"{avg_bmi:.1f}")
-with col5:
-    smoking_pct = (df["Smoking"] == "Yes").mean() * 100
-    st.metric("Smoking Rate", f"{smoking_pct:.1f}%")
-with col6:
-    alcohol_pct = (df["AlcoholDrinking"] == "Yes").mean() * 100
-    st.metric("Alcohol Use Rate", f"{alcohol_pct:.1f}%")
-
-# ===============================
-# Sidebar Filters
-# ===============================
-st.sidebar.header("🧪 Filter the Data")
+# ====================
+# SIDEBAR FILTERS
+# ====================
+st.sidebar.header("🧮 Filter the Data")
 gender = st.sidebar.multiselect("Select Sex", df["Sex"].unique(), default=df["Sex"].unique())
 age = st.sidebar.multiselect("Select Age Category", df["AgeCategory"].unique(), default=df["AgeCategory"].unique())
 
 # Apply Filters
-filtered_df = df[
-    (df["Sex"].isin(gender)) &
-    (df["AgeCategory"].isin(age))
-]
-st.write("Filtered dataset size:", filtered_df.shape)
+filtered_df = df[(df["Sex"].isin(gender)) & (df["AgeCategory"].isin(age))]
 
-# ===============================
-# 📊 Filtered Data Display
-# ===============================
+st.markdown(f"**Filtered dataset size:** `{filtered_df.shape}`")
+
+# Show filtered data
 st.subheader("🔍 Filtered Data")
 st.dataframe(filtered_df)
 
-# ===============================
-# 📊 Heart Disease Pie Chart
-# ===============================
+# ====================
+# Filtered Visuals
+# ====================
+st.header("📊 Visualizations (Filtered Data)")
+
+# 1. Pie Chart (Heart Disease)
 st.subheader("Heart Disease Distribution (Pie Chart)")
 hd_count = filtered_df["HeartDisease"].value_counts()
 if not hd_count.empty:
@@ -77,12 +53,8 @@ if not hd_count.empty:
     ax1.pie(hd_count.values, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
     ax1.axis('equal')
     st.pyplot(fig1)
-else:
-    st.warning("⚠️ No data available for the selected filters.")
 
-# ===============================
-# 📊 Bar Chart by Sex
-# ===============================
+# 2. Bar Chart by Sex
 st.subheader("Heart Disease by Sex")
 sex_counts = filtered_df.groupby(["Sex", "HeartDisease"]).size().unstack().fillna(0)
 if not sex_counts.empty:
@@ -92,9 +64,7 @@ if not sex_counts.empty:
     ax2.set_title("Heart Disease Prevalence by Sex")
     st.pyplot(fig2)
 
-# ===============================
-# 📊 Bar Chart by Age Category
-# ===============================
+# 3. Bar Chart by Age Category
 st.subheader("Heart Disease by Age Category")
 age_counts = filtered_df.groupby(["AgeCategory", "HeartDisease"]).size().unstack().fillna(0)
 if not age_counts.empty:
@@ -108,23 +78,65 @@ if not age_counts.empty:
     plt.xticks(rotation=45)
     st.pyplot(fig3)
 
-# ===============================
-# 📊 Heart Disease by General Health (All Data)
-# ===============================
-st.subheader("Heart Disease by General Health (All Data)")
-genhealth_counts = df.groupby(["GenHealth", "HeartDisease"]).size().unstack().fillna(0)
-if not genhealth_counts.empty:
-    fig4, ax4 = plt.subplots(figsize=(8, 5))
-    genhealth_counts.plot(kind="bar", stacked=True, ax=ax4)
-    ax4.set_ylabel("Number of People")
-    ax4.set_title("Heart Disease Prevalence by General Health")
-    st.pyplot(fig4)
+# ====================
+# Key Indicators (All Data)
+# ====================
+st.header("🗂️ Key Indicators (All Data)")
 
-# ===============================
-# 🔥 Correlation Heatmap (All Data)
-# ===============================
-st.markdown("### 📉 Correlation Heatmap (BMI, Physical & Mental Health, SleepTime)")
-corr_df = df[["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]]
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Total Patients", f"{len(df):,}")
+    st.metric("Avg BMI", round(df["BMI"].mean(), 1))
+with col2:
+    st.metric("Heart Disease %", f"{(df['HeartDisease'] == 'Yes').mean() * 100:.1f}%")
+    st.metric("Smoking Rate", f"{(df['Smoking'] == 'Yes').mean() * 100:.1f}%")
+with col3:
+    st.metric("Avg Sleep Time", f"{df['SleepTime'].mean():.1f} hrs")
+    st.metric("Alcohol Use Rate", f"{(df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%")
+
+# ====================
+# Visuals (All Data)
+# ====================
+st.header("📊 Additional Insights (All Data, Not Filtered)")
+
+# Correlation heatmap
+st.subheader("Correlation Heatmap (BMI, Physical & Mental Health, SleepTime)")
+fig4, ax4 = plt.subplots()
+sns.heatmap(df[["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]].corr(), annot=True, cmap="coolwarm", ax=ax4)
+st.pyplot(fig4)
+
+# Average Sleep Time by General Health
+st.subheader("Average Sleep Time by General Health")
+avg_sleep = df.groupby("GenHealth")["SleepTime"].mean().sort_values()
 fig5, ax5 = plt.subplots()
-sns.heatmap(corr_df.corr(), annot=True, cmap="coolwarm", ax=ax5)
+avg_sleep.plot(kind="bar", ax=ax5, color="green")
+ax5.set_ylabel("Average Sleep Time")
+ax5.set_title("Sleep Time by General Health")
 st.pyplot(fig5)
+
+# Heart Disease by Smoking
+st.subheader("Heart Disease vs Smoking")
+smoke_counts = df.groupby(["Smoking", "HeartDisease"]).size().unstack().fillna(0)
+fig6, ax6 = plt.subplots()
+smoke_counts.plot(kind="bar", stacked=True, ax=ax6)
+ax6.set_ylabel("Count")
+ax6.set_title("Heart Disease Prevalence by Smoking Status")
+st.pyplot(fig6)
+
+# Heart Disease by Diabetes
+st.subheader("Heart Disease by Diabetes Status")
+diabetes_counts = df.groupby(["Diabetic", "HeartDisease"]).size().unstack().fillna(0)
+fig7, ax7 = plt.subplots()
+diabetes_counts.plot(kind="bar", stacked=True, ax=ax7)
+ax7.set_ylabel("Number of People")
+ax7.set_title("Heart Disease Prevalence by Diabetes Status")
+st.pyplot(fig7)
+
+# Heart Disease by General Health
+st.subheader("Heart Disease by General Health (All Data)")
+gen_health_counts = df.groupby(["GenHealth", "HeartDisease"]).size().unstack().fillna(0)
+fig8, ax8 = plt.subplots()
+gen_health_counts.plot(kind="bar", stacked=True, ax=ax8)
+ax8.set_ylabel("Number of People")
+ax8.set_title("Heart Disease by General Health")
+st.pyplot(fig8)
