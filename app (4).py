@@ -204,3 +204,17 @@ ax.set_thetagrids(np.degrees(angles[:-1]), labels)
 ax.set_title("Chronic Conditions Comparison")
 ax.legend(loc="upper right", bbox_to_anchor=(1.1, 1.1))
 st.pyplot(fig)
+
+# Diverging Bar Chart: General Health vs Heart Disease
+st.subheader("🟦🟥 General Health Perception by Heart Disease Status")
+
+gen_health = df.groupby(["GenHealth", "HeartDisease"]).size().unstack().fillna(0)
+gen_health = gen_health.loc[["Excellent", "Very good", "Good", "Fair", "Poor"]]  # ordered
+
+fig, ax = plt.subplots()
+ax.barh(gen_health.index, -gen_health["No"], label="No Heart Disease", color="skyblue")
+ax.barh(gen_health.index, gen_health["Yes"], label="With Heart Disease", color="salmon")
+ax.set_title("General Health Perception by Heart Disease Status")
+ax.set_xlabel("Number of People")
+ax.legend(loc="lower right")
+st.pyplot(fig)
