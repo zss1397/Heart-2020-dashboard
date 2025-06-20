@@ -286,3 +286,16 @@ if not hd_count.empty:
     st.pyplot(fig)
 else:
     st.warning("⚠️ No data available for selected filters to display the pie chart.")
+
+# Heart Disease Distribution - Full Dataset
+st.subheader("Heart Disease Distribution (All Data)")
+full_hd_count = df["HeartDisease"].value_counts()
+
+if not full_hd_count.empty:
+    fig_full, ax_full = plt.subplots()
+    ax_full.pie(full_hd_count.values, labels=full_hd_count.index, autopct='%1.1f%%', startangle=90)
+    ax_full.axis('equal')
+    st.pyplot(fig_full)
+else:
+    st.warning("No data available to show.")
+
