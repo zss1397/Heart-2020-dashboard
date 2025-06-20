@@ -9,15 +9,21 @@ st.set_page_config(layout="wide")
 st.title("Heart Disease Indicators Dashboard (2020)")
 st.markdown("Analyze risk factors for heart disease using CDC BRFSS 2020 data.")
 
-# Load CSV safely
 csv_filename = "heart_2020_cleaned (1).csv"
-if not os.path.exists(csv_filename):
-    st.error("❌ CSV file not found. Please ensure it's uploaded correctly with the exact name.")
-    st.stop()
 
-# Load data
-df = pd.read_csv(csv_filename)
-st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
+# Check if file exists
+if not os.path.exists(csv_filename):
+    st.error("❌ CSV file not found.")
+    st.stop()
+else:
+    st.success("✅ CSV file found. Now loading...")
+
+try:
+    df = pd.read_csv(csv_filename)
+    st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
+except pd.errors.EmptyDataError:
+    st.error("❌ CSV is empty or unreadable.")
+    st.stop()
 
 # Display column names for reference
 st.write("Columns:")
