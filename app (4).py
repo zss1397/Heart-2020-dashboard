@@ -18,10 +18,13 @@ st.title("Heart Disease Indicators Dashboard (2020)")
 st.markdown("Analyze risk factors for heart disease using CDC BRFSS 2020 data.")
 
 # Sidebar filters
-st.sidebar.header("Filter the Data")
-gender = st.sidebar.multiselect("Select Sex", df["Sex"].unique(), default=df["Sex"].unique())
-age = st.sidebar.multiselect("Select Age Category", df["AgeCategory"].unique(), default=df["AgeCategory"].unique())
-race = st.sidebar.multiselect("Select Race", df["Race"].unique(), default=df["Race"].unique())
+gender_options = df["Sex"].dropna().unique().tolist()
+age_options = df["AgeCategory"].dropna().unique().tolist()
+race_options = df["Race"].dropna().unique().tolist()
+
+gender = st.sidebar.multiselect("Select Sex", gender_options, default=gender_options)
+age = st.sidebar.multiselect("Select Age Category", age_options, default=age_options)
+race = st.sidebar.multiselect("Select Race", race_options, default=race_options)
 
 # Apply filters
 filtered_df = df[
