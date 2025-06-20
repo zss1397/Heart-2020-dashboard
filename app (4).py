@@ -91,6 +91,47 @@ if not age_counts.empty:
 else:
     st.info("No data to display by Age Group.")
 
+st.markdown("---")
+st.header("📊 Additional Insights (All Data, Not Filtered)")
+
+# Heatmap of correlations
+st.subheader("Correlation Heatmap (BMI, Physical & Mental Health, SleepTime)")
+import seaborn as sns
+import numpy as np
+
+corr_features = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
+corr_matrix = df[corr_features].corr()
+
+fig4, ax4 = plt.subplots()
+sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax4)
+st.pyplot(fig4)
+
+# Histogram of BMI
+st.subheader("BMI Distribution")
+fig5, ax5 = plt.subplots()
+ax5.hist(df["BMI"], bins=30, color='skyblue', edgecolor='black')
+ax5.set_xlabel("BMI")
+ax5.set_ylabel("Count")
+st.pyplot(fig5)
+
+# Average SleepTime by General Health
+st.subheader("Average Sleep Time by General Health")
+sleep_by_health = df.groupby("GenHealth")["SleepTime"].mean().sort_values()
+
+fig6, ax6 = plt.subplots()
+sleep_by_health.plot(kind="bar", ax=ax6, color='green')
+ax6.set_ylabel("Average Sleep Time (hours)")
+ax6.set_title("Sleep Time by General Health")
+st.pyplot(fig6)
+
+# Stacked Bar: Heart Disease vs Smoking
+st.subheader("Heart Disease vs Smoking")
+smoke_counts = df.groupby(["Smoking", "HeartDisease"]).size().unstack().fillna(0)
+fig7, ax7 = plt.subplots()
+smoke_counts.plot(kind="bar", stacked=True, ax=ax7, color=["#1f77b4", "#ff7f0e"])
+ax7.set_ylabel("Count")
+ax7.set_title("Heart Disease Prevalence by Smoking Status")
+st.pyplot(fig7)
 
 
 
