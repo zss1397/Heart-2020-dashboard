@@ -19,7 +19,12 @@ if not os.path.exists(csv_filename):
     st.stop()
 
 # Load data
-df = pd.read_csv(csv_filename)
+try:
+    df = pd.read_csv(csv_filename)
+    st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
+except Exception as e:
+    st.error(f"❌ Failed to load CSV: {e}")
+    st.stop()
 st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
 
 # Display column names for reference
