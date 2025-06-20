@@ -72,5 +72,5 @@ else:
     plt.xticks(rotation=45)
     st.pyplot(fig3)
 
-
+st.write("Column names:", df.columns.tolist())
 
