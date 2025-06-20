@@ -315,3 +315,23 @@ fig_age_bar = px.bar(
 )
 st.plotly_chart(fig_age_bar)
 
+st.subheader("🎛️ Interactive Health Insights")
+
+# Interactive dropdowns
+selected_sex = st.selectbox("Select Gender", df["Sex"].unique())
+selected_age = st.selectbox("Select Age Group", df["AgeCategory"].unique())
+
+# Filter
+subset = df[(df["Sex"] == selected_sex) & (df["AgeCategory"] == selected_age)]
+
+# Bar chart
+gh_counts = subset.groupby(["GenHealth", "HeartDisease"]).size().unstack().fillna(0)
+gh_counts = gh_counts[["No", "Yes"]] if "No" in gh_counts.columns and "Yes" in gh_counts.columns else gh_counts
+
+fig_int = px.bar(
+    gh_counts,
+    barmode='stack',
+    title=f"Heart Disease by General Health ({selected_sex}, Age {selected_age})",
+    labels={"value": "Number of People", "GenHealth": "General Health"},
+)
+st.plotly_chart(fig_int)
