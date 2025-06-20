@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load data
-df = pd.read_csv(r"heart_2020_cleaned (1).csv")
+df = pd.read_csv("heart_2020_cleaned (1).csv")
 
 # App title
 st.title("Heart Disease Indicators Dashboard (2020)")
@@ -22,18 +22,17 @@ filtered_df = df[
     (df["Race"].isin(race))
 ]
 
-# Display dataset size
-st.write("Filtered dataset size:", filtered_df.shape)
-
-# Handle empty dataset
+# Show filtered dataset size
 if filtered_df.empty:
     st.warning("⚠️ No data found for selected filters. Try broadening your selection.")
 else:
+    st.write("Filtered dataset size:", filtered_df.shape)
+
     # Display filtered data
     st.subheader("Filtered Data")
     st.dataframe(filtered_df)
 
-    # Heart Disease Prevalence Summary
+    # Heart Disease Summary
     st.subheader("Heart Disease Prevalence")
     hd_count = filtered_df["HeartDisease"].value_counts()
     st.write("With Heart Disease:", int(hd_count.get("Yes", 0)))
@@ -55,17 +54,14 @@ else:
         ax.set_ylabel("Number of People")
         ax.set_title("Heart Disease Prevalence by Sex")
         st.pyplot(fig)
-    else:
-        st.info("No data to display for selected filters.")
 
     # Bar Chart by Age
     st.subheader("Heart Disease by Age Category")
     age_counts = filtered_df.groupby(["AgeCategory", "HeartDisease"]).size().unstack().fillna(0)
-    age_order = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49',
-                 '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80 or older']
-    age_counts = age_counts.reindex(age_order).dropna(how='all')
-
     if not age_counts.empty:
+        age_order = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49',
+                     '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80 or older']
+        age_counts = age_counts.reindex(age_order).dropna(how='all')
         fig, ax = plt.subplots(figsize=(10, 5))
         age_counts.plot(kind="bar", stacked=True, ax=ax, color=["#1f77b4", "#ff7f0e"])
         ax.set_ylabel("Number of People")
@@ -73,6 +69,6 @@ else:
         plt.xticks(rotation=45)
         st.pyplot(fig)
     else:
-        st.write("No data available for selected filters.")
+        st.info("No age data available for selected filters.")
 
 
