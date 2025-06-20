@@ -245,3 +245,18 @@ st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
 
 st.write(df.head())
 st.write(df.columns)
+
+st.header("🧮 Dataset Overview")
+
+# Show a few rows
+st.subheader("🔍 Preview of Dataset")
+st.dataframe(df.head())
+
+# Show basic statistics
+st.subheader("📈 Statistical Summary")
+st.write(df.describe())
+
+# Show column names and types
+st.subheader("🧾 Column Info")
+st.write(df.dtypes)
+
