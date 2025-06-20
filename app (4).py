@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import seaborn as sns
+import numpy as np
 
 st.set_page_config(layout="wide")
 
@@ -140,3 +142,91 @@ gen_health_counts.plot(kind="bar", stacked=True, ax=ax8)
 ax8.set_ylabel("Number of People")
 ax8.set_title("Heart Disease by General Health")
 st.pyplot(fig8)
+
+# ===========================
+# Advanced Visualizations (All Data)
+# ===========================
+
+import seaborn as sns
+import numpy as np
+
+st.markdown("---")
+st.subheader("📊 Advanced Visualizations (Entire Dataset)")
+
+# 1. Health Conditions vs Heart Disease (Stacked Bar)
+st.markdown("### 1️⃣ Health Conditions vs Heart Disease (Stacked Bar)")
+conditions = ["Smoking", "AlcoholDrinking", "Stroke", "DiffWalking", "Diabetic", "Asthma", "KidneyDisease", "SkinCancer"]
+condition_data = []
+
+for cond in conditions:
+    counts = df.groupby([cond, "HeartDisease"]).size().unstack().fillna(0)
+    if "Yes" in counts.columns:
+        percent = (counts["Yes"] / counts.sum(axis=1)) * 100
+        condition_data.append(percent)
+
+bar_df = pd.DataFrame(condition_data, index=conditions).T.fillna(0)
+
+fig1, ax1 = plt.subplots(figsize=(10, 5))
+bar_df.plot(kind="bar", stacked=True, ax=ax1)
+ax1.set_title("Proportion with Heart Disease by Health Condition")
+ax1.set_ylabel("Percentage")
+plt.xticks(rotation=45)
+st.pyplot(fig1)
+
+# 2. General Health vs Heart Disease (Diverging Bar)
+st.markdown("### 2️⃣ General Health vs Heart Disease (Diverging Bar)")
+gen_health = df.groupby(["GenHealth", "HeartDisease"]).size().unstack().fillna(0)
+gen_health = gen_health.reindex(["Poor", "Fair", "Good", "Very good", "Excellent"])
+
+fig2, ax2 = plt.subplots(figsize=(8, 5))
+gen_health.plot(kind='bar', ax=ax2, color=["#ff9999", "#66b3ff"])
+ax2.set_title("Heart Disease by General Health")
+ax2.set_ylabel("Count")
+plt.xticks(rotation=30)
+st.pyplot(fig2)
+
+# 3. Sleep Time Distribution
+st.markdown("### 3️⃣ Sleep Time Distribution")
+fig3, ax3 = plt.subplots(figsize=(8, 4))
+sns.histplot(data=df, x="SleepTime", hue="HeartDisease", kde=True, bins=30, ax=ax3)
+ax3.set_title("Distribution of Sleep Time by Heart Disease")
+st.pyplot(fig3)
+
+# 4. BMI Distribution by Heart Disease
+st.markdown("### 4️⃣ BMI Distribution by Heart Disease")
+fig4, ax4 = plt.subplots(figsize=(8, 4))
+sns.kdeplot(data=df, x="BMI", hue="HeartDisease", fill=True, common_norm=False, alpha=0.5, ax=ax4)
+ax4.set_title("BMI Distribution by Heart Disease Status")
+st.pyplot(fig4)
+
+# 5. Radar Chart: Chronic Conditions
+st.markdown("### 5️⃣ Chronic Conditions Radar Chart (Proportions)")
+
+radar_labels = ['Asthma', 'KidneyDisease', 'SkinCancer', 'Stroke', 'Diabetic']
+yes_props = [df[df[c]=="Yes"]["HeartDisease"].value_counts(normalize=True).get("Yes", 0) for c in radar_labels]
+
+angles = np.linspace(0, 2 * np.pi, len(radar_labels), endpoint=False).tolist()
+yes_props += yes_props[:1]
+angles += angles[:1]
+
+fig5 = plt.figure(figsize=(6, 6))
+ax5 = fig5.add_subplot(111, polar=True)
+ax5.plot(angles, yes_props, 'o-', linewidth=2)
+ax5.fill(angles, yes_props, alpha=0.25)
+ax5.set_thetagrids(np.degrees(angles[:-1]), radar_labels)
+ax5.set_title("Proportion with Heart Disease among Chronic Conditions")
+st.pyplot(fig5)
+
+# 6. Simulated Trend (Age vs Heart Disease %)
+st.markdown("### 6️⃣ Simulated Age Trend of Heart Disease Prevalence")
+age_order = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49',
+             '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80 or older']
+age_trend = df.groupby("AgeCategory")["HeartDisease"].apply(lambda x: (x=="Yes").mean()).reindex(age_order)
+
+fig6, ax6 = plt.subplots(figsize=(10, 4))
+age_trend.plot(marker='o', ax=ax6)
+ax6.set_ylabel("Proportion with Heart Disease")
+ax6.set_title("Heart Disease Prevalence by Age Category")
+plt.xticks(rotation=45)
+st.pyplot(fig6)
+
