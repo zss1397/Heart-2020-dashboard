@@ -171,3 +171,36 @@ if "Yes" in radar_data.columns:
     st.pyplot(fig)
 else:
     st.info("No heart disease data found for radar chart.")
+
+# Radar Chart: Chronic Conditions Prevalence by Heart Disease Status
+st.subheader("🕸️ Chronic Conditions Radar Chart (Heart Disease vs No Heart Disease)")
+
+# List of chronic conditions in dataset
+chronic_columns = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
+
+# Calculate proportions for each condition
+radar_data = {}
+for condition in chronic_columns:
+    counts = df.groupby("HeartDisease")[condition].value_counts(normalize=True).unstack().fillna(0)
+    radar_data[condition] = [counts.loc["Yes", "Yes"] * 100, counts.loc["No", "Yes"] * 100]
+
+labels = list(radar_data.keys())
+HD_Yes = [radar_data[cond][0] for cond in labels]
+HD_No = [radar_data[cond][1] for cond in labels]
+
+angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+HD_Yes += HD_Yes[:1]
+HD_No += HD_No[:1]
+angles += angles[:1]
+
+fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+ax.plot(angles, HD_Yes, color="red", linewidth=2, label="Heart Disease: Yes")
+ax.fill(angles, HD_Yes, color="red", alpha=0.25)
+
+ax.plot(angles, HD_No, color="blue", linewidth=2, label="Heart Disease: No")
+ax.fill(angles, HD_No, color="blue", alpha=0.25)
+
+ax.set_thetagrids(np.degrees(angles[:-1]), labels)
+ax.set_title("Chronic Conditions Comparison")
+ax.legend(loc="upper right", bbox_to_anchor=(1.1, 1.1))
+st.pyplot(fig)
