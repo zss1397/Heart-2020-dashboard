@@ -175,4 +175,15 @@ ax_dia.set_ylabel("Number of People")
 ax_dia.set_title("Heart Disease Prevalence by Diabetes Status")
 st.pyplot(fig_dia)
 
+# KPIs / Metrics Section
+st.markdown("## 🧾 Key Indicators (All Data)")
+col1, col2, col3 = st.columns(3)
+col4, col5, col6 = st.columns(3)
 
+col1.metric("Total Patients", f"{len(df):,}")
+col2.metric("Heart Disease %", f"{(df['HeartDisease'] == 'Yes').mean() * 100:.1f}%")
+col3.metric("Avg Sleep Time", f"{df['SleepTime'].mean():.1f} hrs")
+
+col4.metric("Avg BMI", f"{df['BMI'].mean():.1f}")
+col5.metric("Smoking Rate", f"{(df['Smoking'] == 'Yes').mean() * 100:.1f}%")
+col6.metric("Alcohol Use Rate", f"{(df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%")
