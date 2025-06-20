@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load data
-df = pd.read_csv("heart_2020_cleaned (1).csv")  # change if you rename the file
+df = pd.read_csv("heart_2020_cleaned (1).csv")
 
 # App title
 st.title("Heart Disease Indicators Dashboard (2020)")
@@ -22,55 +22,52 @@ filtered_df = df[
     (df["Race"].isin(race))
 ]
 
-# Handle empty result
+# Show filtered data size and table
+st.write("Filtered dataset size:", filtered_df.shape)
+st.subheader("Filtered Data")
+st.dataframe(filtered_df)
+
 if filtered_df.empty:
-    st.warning("⚠️ No data found for selected filters.")
+    st.warning("⚠️ No data found for selected filters. Try broadening your selection.")
 else:
-    st.write("Filtered dataset size:", filtered_df.shape)
-
-    # Display table
-    st.subheader("Filtered Data")
-    st.dataframe(filtered_df)
-
-    # Heart disease summary
-    st.subheader("Heart Disease Prevalence")
+    # Heart disease counts
     hd_count = filtered_df["HeartDisease"].value_counts()
+
+    # Heart Disease Prevalence Text
+    st.subheader("Heart Disease Prevalence")
     st.write("With Heart Disease:", int(hd_count.get("Yes", 0)))
     st.write("Without Heart Disease:", int(hd_count.get("No", 0)))
 
-    # Pie chart
+    # Pie Chart
     st.subheader("Heart Disease Breakdown (Pie Chart)")
-    fig, ax = plt.subplots()
-    ax.pie(hd_count.values, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')
-    st.pyplot(fig)
+    fig1, ax1 = plt.subplots()
+    ax1.pie(hd_count.values, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
+    ax1.axis("equal")
+    st.pyplot(fig1)
 
-    # Bar chart by sex
+    # Bar Chart: Heart Disease by Sex
     st.subheader("Heart Disease by Sex")
     sex_counts = filtered_df.groupby(["Sex", "HeartDisease"]).size().unstack().fillna(0)
-    fig, ax = plt.subplots()
-    sex_counts.plot(kind="bar", stacked=True, ax=ax, color=["#1f77b4", "#ff7f0e"])
-    ax.set_ylabel("Number of People")
-    ax.set_title("Heart Disease Prevalence by Sex")
-    st.pyplot(fig)
+    fig2, ax2 = plt.subplots()
+    sex_counts.plot(kind="bar", stacked=True, ax=ax2, color=["#1f77b4", "#ff7f0e"])
+    ax2.set_ylabel("Number of People")
+    ax2.set_title("Heart Disease Prevalence by Sex")
+    st.pyplot(fig2)
 
-    # Bar chart by age category
+    # Bar Chart: Heart Disease by Age Category
     st.subheader("Heart Disease by Age Category")
+    age_counts = filtered_df.groupby(["AgeCategory", "HeartDisease"]).size().unstack().fillna(0)
+
     age_order = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49',
                  '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80 or older']
-    age_counts = (
-        filtered_df.groupby(["AgeCategory", "HeartDisease"])
-        .size()
-        .unstack()
-        .fillna(0)
-        .reindex(age_order)
-        .dropna(how='all')
-    )
-    fig, ax = plt.subplots(figsize=(10, 5))
-    age_counts.plot(kind="bar", stacked=True, ax=ax, color=["#1f77b4", "#ff7f0e"])
-    ax.set_ylabel("Number of People")
-    ax.set_title("Heart Disease Prevalence by Age Group")
+    age_counts = age_counts.reindex(age_order).dropna(how='all')
+
+    fig3, ax3 = plt.subplots(figsize=(10, 5))
+    age_counts.plot(kind="bar", stacked=True, ax=ax3, color=["#1f77b4", "#ff7f0e"])
+    ax3.set_ylabel("Number of People")
+    ax3.set_title("Heart Disease Prevalence by Age Group")
     plt.xticks(rotation=45)
-    st.pyplot(fig)
+    st.pyplot(fig3)
+
 
 
