@@ -299,3 +299,19 @@ if not full_hd_count.empty:
 else:
     st.warning("No data available to show.")
 
+st.subheader("📈 Heart Disease Rate by Age Group (All Data)")
+
+age_hd_percent = df.groupby("AgeCategory")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0)
+age_hd_percent = (age_hd_percent["Yes"] * 100).sort_values()
+
+fig_age_bar = px.bar(
+    age_hd_percent,
+    x=age_hd_percent.values,
+    y=age_hd_percent.index,
+    orientation='h',
+    labels={"x": "Heart Disease Rate (%)", "y": "Age Group"},
+    title="Heart Disease Rate by Age Group",
+    text=age_hd_percent.round(1).astype(str) + '%'
+)
+st.plotly_chart(fig_age_bar)
+
