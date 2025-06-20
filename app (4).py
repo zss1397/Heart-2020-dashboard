@@ -2,15 +2,18 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load data
+# Load data safely and drop any unwanted columns
 try:
     df = pd.read_csv("heart_2020_cleaned (1).csv")
-    st.write("✅ CSV loaded successfully. Number of records:", len(df))
+    # Drop extra index columns if accidentally added
+    df = df.drop(columns=["Unnamed: 0"], errors='ignore')
+    st.write("✅ CSV loaded successfully. Shape:", df.shape)
+    st.write("Columns:", df.columns.tolist())
 except FileNotFoundError:
-    st.error("❌ CSV file not found. Please check the filename and upload it to GitHub.")
+    st.error("❌ CSV file not found. Please check the filename.")
     st.stop()
 
-# App title
+# Title
 st.title("Heart Disease Indicators Dashboard (2020)")
 st.markdown("Analyze risk factors for heart disease using CDC BRFSS 2020 data.")
 
@@ -35,11 +38,9 @@ st.dataframe(filtered_df)
 if filtered_df.empty:
     st.warning("⚠️ No data found for selected filters. Try broadening your selection.")
 else:
-    # Heart disease counts
-    hd_count = filtered_df["HeartDisease"].value_counts()
-
-    # Heart Disease Prevalence Summary
+    # Heart Disease Prevalence
     st.subheader("Heart Disease Prevalence")
+    hd_count = filtered_df["HeartDisease"].value_counts()
     st.write("With Heart Disease:", int(hd_count.get("Yes", 0)))
     st.write("Without Heart Disease:", int(hd_count.get("No", 0)))
 
@@ -50,7 +51,7 @@ else:
     ax1.axis("equal")
     st.pyplot(fig1)
 
-    # Bar Chart: Heart Disease by Sex
+    # Bar Chart by Sex
     st.subheader("Heart Disease by Sex")
     sex_counts = filtered_df.groupby(["Sex", "HeartDisease"]).size().unstack().fillna(0)
     fig2, ax2 = plt.subplots()
@@ -59,12 +60,14 @@ else:
     ax2.set_title("Heart Disease Prevalence by Sex")
     st.pyplot(fig2)
 
-    # Bar Chart: Heart Disease by Age Category
+    # Bar Chart by Age
     st.subheader("Heart Disease by Age Category")
     age_counts = filtered_df.groupby(["AgeCategory", "HeartDisease"]).size().unstack().fillna(0)
+
     age_order = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49',
                  '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80 or older']
     age_counts = age_counts.reindex(age_order).dropna(how='all')
+
     fig3, ax3 = plt.subplots(figsize=(10, 5))
     age_counts.plot(kind="bar", stacked=True, ax=ax3, color=["#1f77b4", "#ff7f0e"])
     ax3.set_ylabel("Number of People")
@@ -72,5 +75,4 @@ else:
     plt.xticks(rotation=45)
     st.pyplot(fig3)
 
-st.write("Column names:", df.columns.tolist())
 
