@@ -143,3 +143,31 @@ ax8.set_ylabel("Number of People")
 ax8.set_title("Heart Disease by General Health")
 st.pyplot(fig8)
 
+# ====================
+# Radar Chart: Heart Disease Prevalence by General Health
+# ====================
+st.subheader("🕸️ Heart Disease Prevalence by General Health (Radar Chart)")
+
+# Prepare data
+radar_data = df.groupby("GenHealth")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0)
+if "Yes" in radar_data.columns:
+    radar_yes = radar_data["Yes"]
+    categories = list(radar_yes.index)
+    values = radar_yes.values.tolist()
+    values += values[:1]  # repeat first value to close the circle
+
+    # Radar chart setup
+    angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
+    angles += angles[:1]
+
+    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    ax.plot(angles, values, color='orange', linewidth=2)
+    ax.fill(angles, values, color='orange', alpha=0.25)
+    ax.set_yticklabels([])
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(categories)
+    ax.set_title("Heart Disease % by General Health", size=14, weight='bold')
+
+    st.pyplot(fig)
+else:
+    st.info("No heart disease data found for radar chart.")
