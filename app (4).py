@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load data
-df = pd.read_csv("heart_2020_cleaned (1).csv")
+df = pd.read_csv(r"heart_2020_cleaned (1).csv")
 
 st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
 
