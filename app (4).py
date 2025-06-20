@@ -187,3 +187,20 @@ col3.metric("Avg Sleep Time", f"{df['SleepTime'].mean():.1f} hrs")
 col4.metric("Avg BMI", f"{df['BMI'].mean():.1f}")
 col5.metric("Smoking Rate", f"{(df['Smoking'] == 'Yes').mean() * 100:.1f}%")
 col6.metric("Alcohol Use Rate", f"{(df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%")
+
+# ===============================
+# Visual: Heart Disease by General Health
+# ===============================
+st.subheader("Heart Disease by General Health (All Data)")
+
+genhealth_counts = df.groupby(["GenHealth", "HeartDisease"]).size().unstack().fillna(0)
+
+if not genhealth_counts.empty:
+    fig, ax = plt.subplots()
+    genhealth_counts.plot(kind="bar", stacked=True, ax=ax)
+    ax.set_ylabel("Number of People")
+    ax.set_title("Heart Disease by General Health")
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
+else:
+    st.info("No data available for General Health.")
