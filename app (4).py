@@ -241,7 +241,7 @@ sns.kdeplot(data=df, x="BMI", hue="HeartDisease", fill=True, common_norm=False, 
 ax.set_title("BMI Distribution by Heart Disease Status")
 st.pyplot(fig)
 
-✅ CSV loaded successfully. Shape: (rows, columns)
+st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
 
 st.write(df.head())
 st.write(df.columns)
