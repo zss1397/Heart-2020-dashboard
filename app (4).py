@@ -139,5 +139,40 @@ ax7.set_ylabel("Count")
 ax7.set_title("Heart Disease Prevalence by Smoking Status")
 st.pyplot(fig7)
 
+# ===============================
+# 📊 Additional Insights (All Data, Not Filtered)
+# ===============================
+st.markdown("## 📊 Additional Insights (All Data, Not Filtered)")
+
+# 1. Correlation Heatmap
+st.subheader("Correlation Heatmap (BMI, Physical & Mental Health, SleepTime)")
+import seaborn as sns
+
+numeric_cols = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
+corr_matrix = df[numeric_cols].corr()
+
+fig_corr, ax_corr = plt.subplots()
+sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", ax=ax_corr)
+st.pyplot(fig_corr)
+
+# 2. General Health Distribution
+st.subheader("General Health Distribution")
+genhealth_counts = df["GenHealth"].value_counts()
+
+fig_gen, ax_gen = plt.subplots()
+genhealth_counts.plot(kind="bar", color="skyblue", ax=ax_gen)
+ax_gen.set_ylabel("Count")
+ax_gen.set_title("General Health Ratings")
+st.pyplot(fig_gen)
+
+# 3. Diabetes vs Heart Disease
+st.subheader("Heart Disease by Diabetes Status")
+diabetes_hd = df.groupby(["Diabetic", "HeartDisease"]).size().unstack().fillna(0)
+
+fig_dia, ax_dia = plt.subplots()
+diabetes_hd.plot(kind="bar", stacked=True, ax=ax_dia)
+ax_dia.set_ylabel("Number of People")
+ax_dia.set_title("Heart Disease Prevalence by Diabetes Status")
+st.pyplot(fig_dia)
 
 
