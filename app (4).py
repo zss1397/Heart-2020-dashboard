@@ -100,13 +100,6 @@ fig_age = px.bar(
 )
 st.plotly_chart(fig_age, use_container_width=True)
 
-st.markdown("### BMI Distribution by Heart Disease Status")
-fig_bmi, ax = plt.subplots()
-sns.kdeplot(data=filtered_df, x="BMI", hue="HeartDisease", fill=True, common_norm=False, alpha=0.4, ax=ax)
-ax.set_title("BMI Distribution by Heart Disease Status")
-ax.set_xlabel("BMI")
-st.pyplot(fig_bmi)
-
 st.markdown("### General Health Distribution")
 genhealth_counts = filtered_df["GenHealth"].value_counts().sort_index()
 fig_gen = px.bar(
