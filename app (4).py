@@ -257,16 +257,6 @@ col1.metric("Avg Sleep Time (hrs)", avg_sleep)
 col2.metric("Avg BMI", avg_bmi)
 col3.metric("% Reporting Excellent Health", f"{excellent_health}%")
 
-st.subheader("🚬 Heart Disease Rate by Smoking Status")
-smoke_hd = df.groupby("Smoking")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
-    smoke_hd,
-    barmode="group",
-    labels={"value": "% of Group", "Smoking": "Smoking Status", "variable": "Heart Disease"},
-    title="Heart Disease Rate by Smoking Status"
-)
-st.plotly_chart(fig, use_container_width=True)
-
 import plotly.express as px
 import pandas as pd
 
