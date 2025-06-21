@@ -378,5 +378,5 @@ st.write(filtered_df.head())
 if filtered_df.empty:
     st.warning("⚠️ Filtered dataset is empty. Try adjusting your sidebar filters.")
 else:
-    # All the visuals go here (pie chart, bar charts, etc.)
+    pass  # Or you can add actual visualizations here
 
