@@ -351,3 +351,25 @@ ax.set_xlabel("Percentage with Heart Disease")
 ax.set_ylabel("Age Group")
 ax.set_title("Heart Disease Prevalence by Age")
 st.pyplot(fig)
+
+# === DEBUG BLOCK ===
+st.subheader("✅ Debugging Visual Display")
+
+# Check filtered data
+st.write("Filtered Data Size:", filtered_df.shape)
+
+# Check HeartDisease column presence
+if "HeartDisease" in filtered_df.columns:
+    st.success("✅ 'HeartDisease' column exists in filtered data.")
+    st.write("HeartDisease value counts (filtered):")
+    st.write(filtered_df["HeartDisease"].value_counts())
+else:
+    st.error("❌ 'HeartDisease' column missing!")
+
+# Check full data too
+st.write("HeartDisease value counts (full dataset):")
+st.write(df["HeartDisease"].value_counts())
+
+# Show head of filtered data
+st.write("🔍 Sample filtered data:")
+st.write(filtered_df.head())
