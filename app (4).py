@@ -39,6 +39,8 @@ csv_filename = "heart_2020_cleaned (1).csv"
 if not os.path.exists(csv_filename):
     st.error("❌ CSV file not found.")
     st.stop()
+    
+hd_df = df[df["HeartDisease"] == "Yes"]
 
 try:
     df = pd.read_csv(csv_filename)
@@ -61,14 +63,14 @@ if hd_status != "All":
 st.header("📊 Key Metrics")
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric("Total Patients", f"{len(df):,}")
-    st.metric("Avg BMI", round(df["BMI"].mean(), 1))
+    st.metric("Total Heart Disease Patients", f"{len(hd_df):,}")
+    st.metric("Avg BMI", round(hd_df["BMI"].mean(), 1))
 with col2:
-    st.metric("Heart Disease %", f"{(df['HeartDisease'] == 'Yes').mean() * 100:.1f}%")
-    st.metric("Smoking Rate", f"{(df['Smoking'] == 'Yes').mean() * 100:.1f}%")
+    st.metric("Avg Sleep Time", f"{hd_df['SleepTime'].mean():.1f} hrs")
+    st.metric("Smoking Rate", f"{(hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%")
 with col3:
-    st.metric("Avg Sleep Time", f"{df['SleepTime'].mean():.1f} hrs")
-    st.metric("Alcohol Use Rate", f"{(df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%")
+    st.metric("Alcohol Use Rate", f"{(hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%")
+    st.metric("Diabetes Rate", f"{(hd_df['Diabetic'] == 'Yes').mean() * 100:.1f}%")
 
 # === Section 1: Profile & Distribution ===
 st.header("🧑‍🤝‍🧑 Patient Profile & Distribution")
