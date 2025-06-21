@@ -59,8 +59,6 @@ filtered_df = df[df["Sex"].isin(gender) & df["AgeCategory"].isin(age)]
 if hd_status != "All":
     filtered_df = filtered_df[filtered_df["HeartDisease"] == hd_status]
 
-st.markdown(f"**Filtered dataset size:** `{filtered_df.shape}`")
-st.dataframe(filtered_df.head())
 # === Key Metrics ===
 st.header("📊 Key Metrics")
 col1, col2, col3 = st.columns(3)
