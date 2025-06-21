@@ -399,3 +399,47 @@ if not donut_counts.empty:
 else:
     st.warning("⚠️ No data available for donut chart.")
 
+import plotly.graph_objects as go
+
+# Metrics to visualize with gauges
+avg_sleep = df["SleepTime"].mean()
+avg_bmi = df["BMI"].mean()
+gen_health_counts = df["GenHealth"].value_counts(normalize=True).sort_index()
+
+# Create 3 gauge charts
+fig = go.Figure()
+
+# Gauge 1: Average Sleep Time
+fig.add_trace(go.Indicator(
+    mode="gauge+number",
+    value=avg_sleep,
+    title={'text': "Avg Sleep Time (hrs)"},
+    gauge={'axis': {'range': [0, 12]}, 'bar': {'color': "purple"}},
+    domain={'x': [0, 0.3], 'y': [0, 1]}
+))
+
+# Gauge 2: Average BMI
+fig.add_trace(go.Indicator(
+    mode="gauge+number",
+    value=avg_bmi,
+    title={'text': "Avg BMI"},
+    gauge={'axis': {'range': [0, 50]}, 'bar': {'color': "darkblue"}},
+    domain={'x': [0.35, 0.65], 'y': [0, 1]}
+))
+
+# Gauge 3: Excellent Health %
+excellent_pct = gen_health_counts.get("Excellent", 0) * 100
+fig.add_trace(go.Indicator(
+    mode="gauge+number",
+    value=excellent_pct,
+    title={'text': "% Reporting Excellent Health"},
+    gauge={'axis': {'range': [0, 100]}, 'bar': {'color': "green"}},
+    domain={'x': [0.7, 1], 'y': [0, 1]}
+))
+
+fig.update_layout(
+    title="💡 Health Indicators Overview (Gauge Meters)",
+    height=400
+)
+
+st.plotly_chart(fig)
