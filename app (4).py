@@ -96,3 +96,15 @@ if not subset.empty:
     st.plotly_chart(fig_int)
 else:
     st.warning("No data for selected filter combination.")
+st.subheader("🌞 Sunburst Chart: Heart Disease Breakdown by Sex and Age")
+sunburst_df = df.copy()
+sunburst_fig = px.sunburst(
+    sunburst_df,
+    path=["Sex", "AgeCategory", "HeartDisease"],
+    values=None,
+    title="Nested Distribution of Heart Disease by Sex and Age",
+    color="HeartDisease",
+    color_discrete_map={"Yes": "crimson", "No": "lightblue"}
+)
+st.plotly_chart(sunburst_fig)
+
