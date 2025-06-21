@@ -335,3 +335,15 @@ fig_int = px.bar(
     labels={"value": "Number of People", "GenHealth": "General Health"},
 )
 st.plotly_chart(fig_int)
+
+# Horizontal Bar Chart: Heart Disease Rate by Age Group
+st.subheader("Heart Disease Rate by Age Group (All Data)")
+age_heart_rate = df.groupby("AgeCategory")["HeartDisease"].apply(lambda x: (x == "Yes").mean() * 100)
+age_heart_rate = age_heart_rate.reindex(['18-24', '25-29', '30-34', '35-39', '40-44', '45-49',
+                                         '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80 or older'])
+fig, ax = plt.subplots(figsize=(8, 5))
+age_heart_rate.plot(kind="barh", ax=ax, color="steelblue")
+ax.set_xlabel("Percentage with Heart Disease")
+ax.set_ylabel("Age Group")
+ax.set_title("Heart Disease Prevalence by Age")
+st.pyplot(fig)
