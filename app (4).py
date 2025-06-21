@@ -443,3 +443,130 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig)
+
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+
+st.set_page_config(layout="wide")
+
+# Title
+st.title("❤️ Heart Disease Indicators Dashboard (2020)")
+st.markdown("Analyze risk factors for heart disease using CDC BRFSS 2020 data.")
+
+# Load CSV safely
+csv_filename = "heart_2020_cleaned (1).csv"
+if not os.path.exists(csv_filename):
+    st.error("❌ CSV file not found. Please ensure it's uploaded correctly with the exact name.")
+    st.stop()
+
+try:
+    df = pd.read_csv(csv_filename)
+    st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
+except Exception as e:
+    st.error(f"❌ Failed to load CSV: {e}")
+    st.stop()
+
+# Display columns
+with st.expander("🧾 Columns in Dataset"):
+    st.json({i: col for i, col in enumerate(df.columns)})
+
+# Sidebar Filters
+st.sidebar.header("🧮 Filter the Data")
+gender = st.sidebar.multiselect("Select Sex", df["Sex"].unique(), default=df["Sex"].unique())
+age = st.sidebar.multiselect("Select Age Category", df["AgeCategory"].unique(), default=df["AgeCategory"].unique())
+heart_status = st.sidebar.radio("Heart Disease Status", options=["All", "Yes", "No"], index=0)
+
+# Apply filters
+filtered_df = df[(df["Sex"].isin(gender)) & (df["AgeCategory"].isin(age))]
+if heart_status == "Yes":
+    filtered_df = filtered_df[filtered_df["HeartDisease"] == "Yes"]
+elif heart_status == "No":
+    filtered_df = filtered_df[filtered_df["HeartDisease"] == "No"]
+
+st.markdown(f"**Filtered dataset size:** `{filtered_df.shape}`")
+
+# Data Preview
+st.subheader("🔍 Preview of Filtered Data")
+st.dataframe(filtered_df)
+
+# ====================
+# Gauge Visuals Based on Heart Disease Filter
+# ====================
+st.header("🧭 Key Health Indicators (Gauge Style)")
+
+# Choose data based on filter
+if heart_status == "Yes":
+    gauge_df = df[df["HeartDisease"] == "Yes"]
+elif heart_status == "No":
+    gauge_df = df[df["HeartDisease"] == "No"]
+else:
+    gauge_df = df.copy()
+
+# Calculate metrics
+avg_sleep = gauge_df["SleepTime"].mean()
+avg_bmi = gauge_df["BMI"].mean()
+excellent_health_pct = (gauge_df["GenHealth"] == "Excellent").mean() * 100
+
+# Gauge: Average Sleep
+fig1 = go.Figure(go.Indicator(
+    mode="gauge+number",
+    value=avg_sleep,
+    title={'text': "Avg Sleep Time (hrs)"},
+    gauge={
+        'axis': {'range': [0, 10]},
+        'bar': {'color': "purple"},
+        'steps': [
+            {'range': [0, 4], 'color': "#f08080"},
+            {'range': [4, 7], 'color': "#fdd835"},
+            {'range': [7, 10], 'color': "#8bc34a"},
+        ]
+    }
+))
+
+# Gauge: Average BMI
+fig2 = go.Figure(go.Indicator(
+    mode="gauge+number",
+    value=avg_bmi,
+    title={'text': "Average BMI"},
+    gauge={
+        'axis': {'range': [10, 50]},
+        'bar': {'color': "orange"},
+        'steps': [
+            {'range': [10, 18.5], 'color': "#90caf9"},
+            {'range': [18.5, 24.9], 'color': "#a5d6a7"},
+            {'range': [25, 29.9], 'color': "#fff59d"},
+            {'range': [30, 50], 'color': "#ef9a9a"},
+        ]
+    }
+))
+
+# Gauge: Excellent General Health %
+fig3 = go.Figure(go.Indicator(
+    mode="gauge+number",
+    value=excellent_health_pct,
+    title={'text': "% with Excellent Health"},
+    gauge={
+        'axis': {'range': [0, 100]},
+        'bar': {'color': "green"},
+        'steps': [
+            {'range': [0, 20], 'color': "#ffccbc"},
+            {'range': [20, 50], 'color': "#ffe082"},
+            {'range': [50, 100], 'color': "#aed581"},
+        ]
+    }
+))
+
+# Layout side by side
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.plotly_chart(fig1, use_container_width=True)
+with col2:
+    st.plotly_chart(fig2, use_container_width=True)
+with col3:
+    st.plotly_chart(fig3, use_container_width=True)
