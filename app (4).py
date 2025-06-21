@@ -172,3 +172,9 @@ ax.set_title("BMI Distribution by Heart Disease Status")
 ax.set_xlabel("BMI")
 st.pyplot(fig)
 
+# Correlation heatmap
+st.subheader("📉 Correlation Heatmap (BMI, Physical & Mental Health, SleepTime)")
+fig, ax = plt.subplots()
+sns.heatmap(df[["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]].corr(), annot=True, cmap="coolwarm", ax=ax)
+ax.set_title("Correlation Matrix of Health Metrics")
+st.pyplot(fig)
