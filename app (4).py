@@ -46,6 +46,8 @@ except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
     st.stop()
 
+hd_df = df[df["HeartDisease"] == "Yes"]
+
 # Filter for heart disease patients
 hd_df = df[df["HeartDisease"] == "Yes"]
     
