@@ -100,17 +100,6 @@ fig_age = px.bar(
 )
 st.plotly_chart(fig_age, use_container_width=True)
 
-st.markdown("### General Health Distribution")
-genhealth_counts = filtered_df["GenHealth"].value_counts().sort_index()
-fig_gen = px.bar(
-    x=genhealth_counts.index, 
-    y=genhealth_counts.values, 
-    labels={"x": "General Health", "y": "Count"}, 
-    title="General Health (Filtered)"
-)
-st.plotly_chart(fig_gen, use_container_width=True)
-
-
 # === Horizontal Bar Chart (Age vs Heart Disease %) ===
 st.subheader("📈 Heart Disease Rate by Age Group (All Data)")
 age_hd_percent = df.groupby("AgeCategory")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0)
