@@ -274,14 +274,3 @@ fig5 = go.Figure(data=go.Scatterpolar(
 fig5.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), title="Chronic Conditions Radar")
 st.plotly_chart(fig5, use_container_width=True)
 
-# 6. KPIs: Sleep, BMI, Excellent Health %
-st.subheader("🔢 Key Health Indicators (Heart Disease Patients)")
-avg_sleep = round(heart_df["SleepTime"].mean(), 1)
-avg_bmi = round(heart_df["BMI"].mean(), 1)
-excellent_health = round((heart_df["GenHealth"] == "Excellent").mean() * 100, 1)
-
-col1, col2, col3 = st.columns(3)
-col1.metric("Avg Sleep Time (hrs)", avg_sleep)
-col2.metric("Avg BMI", avg_bmi)
-col3.metric("% Reporting Excellent Health", f"{excellent_health}%")
-
