@@ -271,8 +271,15 @@ st.subheader("🚬 Smoking & Stroke Rates by Gender")
 smoke_stroke = heart_df.groupby("Sex")[["Smoking", "Stroke"]].apply(lambda x: (x == "Yes").mean() * 100).reset_index()
 smoke_stroke_melted = pd.melt(smoke_stroke, id_vars="Sex", var_name="Condition", value_name="Percentage")
 
-fig_gen_health = px.bar(smoke_stroke_melted, x="Sex", y="Percentage", color="Condition", barmode="stack", title="Smoking & Stroke Among Heart Disease Patients")
-st.plotly_chart(fig_gen_health, use_container_width=True)
+fig_smoking_stroke = px.bar(
+    smoke_stroke_melted,
+    x="Sex",
+    y="Percentage",
+    color="Condition",
+    barmode="stack",
+    title="Smoking & Stroke Among Heart Disease Patients"
+)
+st.plotly_chart(fig_smoking_stroke, use_container_width=True)
 
 # 2. Bar: General Health Perception Among Heart Disease Patients
 st.subheader("📋 General Health Status")
