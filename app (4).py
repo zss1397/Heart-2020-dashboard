@@ -201,6 +201,8 @@ st.pyplot(fig)
 # 1. Stacked Bar: Smoking & Stroke vs Heart Disease by Gender
 st.subheader("🚬 Smoking & Stroke Rates by Gender")
 
+heart_df = df[df["HeartDisease"] == "Yes"]
+
 smoke_stroke = heart_df.groupby("Sex")[["Smoking", "Stroke"]].apply(lambda x: (x == "Yes").mean() * 100).reset_index()
 smoke_stroke_melted = pd.melt(smoke_stroke, id_vars="Sex", var_name="Condition", value_name="Percentage")
 
