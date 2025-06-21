@@ -61,7 +61,6 @@ if hd_status != "All":
 
 st.markdown(f"**Filtered dataset size:** `{filtered_df.shape}`")
 st.dataframe(filtered_df.head())
-
 # === Key Metrics ===
 st.header("📊 Key Metrics")
 col1, col2, col3 = st.columns(3)
@@ -75,10 +74,47 @@ with col3:
     st.metric("Avg Sleep Time", f"{df['SleepTime'].mean():.1f} hrs")
     st.metric("Alcohol Use Rate", f"{(df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%")
 
-# === Donut Chart ===
-st.subheader("❤️ Heart Disease Proportion (Donut Chart)")
-fig = px.pie(df, names="HeartDisease", hole=0.4, title="Heart Disease Proportion", color_discrete_sequence=px.colors.qualitative.Set1)
-st.plotly_chart(fig)
+# === Section 1: Profile & Distribution ===
+st.header("🧑‍🤝‍🧑 Patient Profile & Distribution")
+st.markdown("### Heart Disease Prevalence")
+
+# Heart Disease Prevalence Pie (Filtered)
+hd_counts = filtered_df["HeartDisease"].value_counts()
+fig_pie = px.pie(
+    names=hd_counts.index, 
+    values=hd_counts.values, 
+    hole=0.45, 
+    title="Heart Disease Prevalence (Filtered)"
+)
+st.plotly_chart(fig_pie, use_container_width=True)
+
+st.markdown("### Age Distribution")
+age_counts = filtered_df["AgeCategory"].value_counts().sort_index()
+fig_age = px.bar(
+    x=age_counts.index, 
+    y=age_counts.values, 
+    labels={"x": "Age Category", "y": "Count"}, 
+    title="Age Distribution"
+)
+st.plotly_chart(fig_age, use_container_width=True)
+
+st.markdown("### BMI Distribution by Heart Disease Status")
+fig_bmi, ax = plt.subplots()
+sns.kdeplot(data=filtered_df, x="BMI", hue="HeartDisease", fill=True, common_norm=False, alpha=0.4, ax=ax)
+ax.set_title("BMI Distribution by Heart Disease Status")
+ax.set_xlabel("BMI")
+st.pyplot(fig_bmi)
+
+st.markdown("### General Health Distribution")
+genhealth_counts = filtered_df["GenHealth"].value_counts().sort_index()
+fig_gen = px.bar(
+    x=genhealth_counts.index, 
+    y=genhealth_counts.values, 
+    labels={"x": "General Health", "y": "Count"}, 
+    title="General Health (Filtered)"
+)
+st.plotly_chart(fig_gen, use_container_width=True)
+
 
 # === Horizontal Bar Chart (Age vs Heart Disease %) ===
 st.subheader("📈 Heart Disease Rate by Age Group (All Data)")
