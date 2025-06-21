@@ -255,64 +255,86 @@ ax.set_title("BMI Distribution by Heart Disease Status")
 ax.set_xlabel("BMI")
 st.pyplot(fig)
 
-# 1. Stacked Bar: Smoking & Stroke vs Heart Disease by Gender
-st.subheader("🚬 Smoking & Stroke Rates by Gender")
+# === Section 2: Advanced Profile of Heart Disease Patients ===
+st.header("🫀 Advanced Profile: Heart Disease Patients")
+heart_df = filtered_df[filtered_df["HeartDisease"] == "Yes"]
+st.markdown(f"**Subset size:** `{heart_df.shape}`")
 
-heart_df = df[df["HeartDisease"] == "Yes"]
-
+# 1. Smoking & Stroke by Gender (stacked bar)
+st.subheader("🚬 Smoking & Stroke by Gender")
 smoke_stroke = heart_df.groupby("Sex")[["Smoking", "Stroke"]].apply(lambda x: (x == "Yes").mean() * 100).reset_index()
 smoke_stroke_melted = pd.melt(smoke_stroke, id_vars="Sex", var_name="Condition", value_name="Percentage")
-
-fig_smoke_stroke = px.bar(smoke_stroke_melted, x="Sex", y="Percentage", color="Condition", barmode="stack", title="Smoking & Stroke Among Heart Disease Patients")
+fig_smoke_stroke = px.bar(
+    smoke_stroke_melted,
+    x="Sex",
+    y="Percentage",
+    color="Condition",
+    barmode="stack",
+    title="Smoking & Stroke Rates by Gender (Heart Disease Patients)"
+)
 st.plotly_chart(fig_smoke_stroke, use_container_width=True)
 
-# 2. Bar: General Health Perception Among Heart Disease Patients
-st.subheader("📋 General Health Status")
-
+# 2. General Health Status
+st.subheader("📋 General Health Status (Heart Disease Patients)")
 gen_health = heart_df["GenHealth"].value_counts(normalize=True).sort_index() * 100
-fig2 = px.bar(x=gen_health.index, y=gen_health.values, title="Self-Reported General Health (%)", labels={"x": "Health Status", "y": "%"})
-st.plotly_chart(fig2, use_container_width=True)
+fig_genhealth = px.bar(
+    x=gen_health.index,
+    y=gen_health.values,
+    labels={"x": "General Health", "y": "%"},
+    title="Self-Reported General Health (%)"
+)
+st.plotly_chart(fig_genhealth, use_container_width=True)
 
-# 3. Line Chart: BMI Trend by Age Group
-st.subheader("📈 Average BMI by Age Group")
-
+# 3. Average BMI by Age Group (line)
+st.subheader("📈 Average BMI by Age Group (Heart Disease Patients)")
 bmi_age = heart_df.groupby("AgeCategory")["BMI"].mean().reset_index()
-fig3 = px.line(bmi_age, x="AgeCategory", y="BMI", markers=True, title="Average BMI Across Age Groups")
-st.plotly_chart(fig3, use_container_width=True)
+fig_bmi_age = px.line(
+    bmi_age,
+    x="AgeCategory",
+    y="BMI",
+    markers=True,
+    title="Average BMI Across Age Groups"
+)
+st.plotly_chart(fig_bmi_age, use_container_width=True)
 
-# 4. Donut Chart: Age Distribution
-st.subheader("🍩 Age Distribution")
+# 4. Age Distribution (donut)
+st.subheader("🍩 Age Distribution (Heart Disease Patients)")
+age_counts_hd = heart_df["AgeCategory"].value_counts().sort_index()
+fig_age_hd = px.pie(
+    values=age_counts_hd.values,
+    names=age_counts_hd.index,
+    hole=0.5,
+    title="Age Breakdown of Heart Disease Patients"
+)
+st.plotly_chart(fig_age_hd, use_container_width=True)
 
-age_counts = heart_df["AgeCategory"].value_counts().sort_index()
-fig4 = px.pie(values=age_counts.values, names=age_counts.index, hole=0.5, title="Age Breakdown of Heart Disease Patients")
-st.plotly_chart(fig4, use_container_width=True)
-
-# 5. Radar Chart: Chronic Condition Prevalence
-st.subheader("🧬 Chronic Conditions Radar")
-
+# 5. Chronic Conditions Radar Chart
+st.subheader("🧬 Chronic Conditions Radar (Heart Disease Patients)")
 chronic_columns = ["Diabetic", "Stroke", "Asthma", "KidneyDisease", "SkinCancer"]
 radar_data = {col: (heart_df[col] == "Yes").mean() * 100 for col in chronic_columns}
 radar_df = pd.DataFrame({"Condition": list(radar_data.keys()), "Percentage": list(radar_data.values())})
-
-fig5 = go.Figure(data=go.Scatterpolar(
+fig_radar = go.Figure(data=go.Scatterpolar(
     r=radar_df["Percentage"],
     theta=radar_df["Condition"],
     fill='toself',
     name='Chronic Conditions %'
 ))
-fig5.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), title="Chronic Conditions Radar")
-st.plotly_chart(fig5, use_container_width=True)
+fig_radar.update_layout(
+    polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+    title="Chronic Conditions Radar"
+)
+st.plotly_chart(fig_radar, use_container_width=True)
 
-# 6. KPIs: Sleep, BMI, Excellent Health %
+# 6. KPIs for Heart Disease Patients
 st.subheader("🔢 Key Health Indicators (Heart Disease Patients)")
 avg_sleep = round(heart_df["SleepTime"].mean(), 1)
 avg_bmi = round(heart_df["BMI"].mean(), 1)
 excellent_health = round((heart_df["GenHealth"] == "Excellent").mean() * 100, 1)
-
 col1, col2, col3 = st.columns(3)
 col1.metric("Avg Sleep Time (hrs)", avg_sleep)
 col2.metric("Avg BMI", avg_bmi)
-col3.metric("% Reporting Excellent Health", f"{excellent_health}%")
+col3.metric("% Excellent Health", f"{excellent_health}%")
+
 
 import plotly.express as px
 import pandas as pd
