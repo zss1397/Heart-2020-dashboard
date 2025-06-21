@@ -47,6 +47,10 @@ st.markdown(f"**Filtered dataset size:** `{filtered_df.shape}`")
 st.subheader("🔍 Filtered Data")
 st.dataframe(filtered_df)
 
+if filtered_df.empty:
+    st.warning("⚠️ Filtered dataset is empty. Try adjusting your sidebar filters.")
+
+
 # ====================
 # Filtered Visuals
 # ====================
@@ -54,7 +58,7 @@ st.header("📊 Visualizations (Filtered Data)")
 
 # 1. Pie Chart (Heart Disease)
 st.subheader("Heart Disease Distribution (Pie Chart)")
-hd_count = filtered_df["HeartDisease"].value_counts()
+hd_count = df["HeartDisease"].value_counts()  # For testing on full data
 if not hd_count.empty:
     fig1, ax1 = plt.subplots()
     ax1.pie(hd_count.values, labels=hd_count.index, autopct='%1.1f%%', startangle=90)
