@@ -256,3 +256,33 @@ col1, col2, col3 = st.columns(3)
 col1.metric("Avg Sleep Time (hrs)", avg_sleep)
 col2.metric("Avg BMI", avg_bmi)
 col3.metric("% Reporting Excellent Health", f"{excellent_health}%")
+
+st.subheader("🧬 Chronic Conditions Radar")
+
+chronic_columns = ["Diabetic", "Stroke", "Asthma", "KidneyDisease", "SkinCancer"]
+radar_data = {col: (heart_df[col] == "Yes").mean() * 100 for col in chronic_columns}
+radar_df = pd.DataFrame({"Condition": list(radar_data.keys()), "Percentage": list(radar_data.values())})
+
+import plotly.graph_objects as go
+fig5 = go.Figure(data=go.Scatterpolar(
+    r=radar_df["Percentage"],
+    theta=radar_df["Condition"],
+    fill='toself',
+    name='Chronic Conditions %'
+))
+fig5.update_layout(
+    polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+    title="Chronic Conditions Radar"
+)
+st.plotly_chart(fig5, use_container_width=True)
+
+st.subheader("🔢 Key Health Indicators (Heart Disease Patients)")
+avg_sleep = round(heart_df["SleepTime"].mean(), 1)
+avg_bmi = round(heart_df["BMI"].mean(), 1)
+excellent_health = round((heart_df["GenHealth"] == "Excellent").mean() * 100, 1)
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Avg Sleep Time (hrs)", avg_sleep)
+col2.metric("Avg BMI", avg_bmi)
+col3.metric("% Reporting Excellent Health", f"{excellent_health}%")
+
