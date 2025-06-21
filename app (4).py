@@ -108,3 +108,37 @@ sunburst_fig = px.sunburst(
 )
 st.plotly_chart(sunburst_fig)
 
+st.subheader("🔗 Parallel Categories: Lifestyle vs Heart Disease")
+parallel_df = df[["Smoking", "AlcoholDrinking", "HeartDisease"]]
+fig_parallel = px.parallel_categories(
+    parallel_df,
+    dimensions=["Smoking", "AlcoholDrinking", "HeartDisease"],
+    color_continuous_scale=px.colors.sequential.Inferno,
+    title="Lifestyle Habits and Heart Disease Relationship"
+)
+st.plotly_chart(fig_parallel)
+
+st.subheader("🔗 Parallel Categories: Lifestyle vs Heart Disease")
+parallel_df = df[["Smoking", "AlcoholDrinking", "HeartDisease"]]
+fig_parallel = px.parallel_categories(
+    parallel_df,
+    dimensions=["Smoking", "AlcoholDrinking", "HeartDisease"],
+    color_continuous_scale=px.colors.sequential.Inferno,
+    title="Lifestyle Habits and Heart Disease Relationship"
+)
+st.plotly_chart(fig_parallel)
+
+st.subheader("🔥 Heatmap: Conditions by Heart Disease Status")
+condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
+heat_df = df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
+fig, ax = plt.subplots()
+sns.heatmap(heat_df, annot=True, cmap="YlOrRd", fmt=".1f", ax=ax)
+ax.set_title("Percentage with Each Condition by Heart Disease Status")
+st.pyplot(fig)
+
+st.subheader("📦 BMI Distribution by General Health")
+fig = px.box(df, x="GenHealth", y="BMI", color="GenHealth",
+             title="BMI Boxplot by General Health", points="all")
+st.plotly_chart(fig)
+
+
