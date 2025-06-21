@@ -39,10 +39,12 @@ csv_filename = "heart_2020_cleaned (1).csv"
 if not os.path.exists(csv_filename):
     st.error("❌ CSV file not found.")
     st.stop()
+
 try:
     df = pd.read_csv(csv_filename)
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
+    st.stop()
 
 hd_df = df[df["HeartDisease"] == "Yes"]
 
