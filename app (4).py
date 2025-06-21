@@ -373,3 +373,9 @@ st.write(df["HeartDisease"].value_counts())
 # Show head of filtered data
 st.write("🔍 Sample filtered data:")
 st.write(filtered_df.head())
+
+if filtered_df.empty:
+    st.warning("⚠️ Filtered dataset is empty. Try adjusting your sidebar filters.")
+else:
+    # All the visuals go here (pie chart, bar charts, etc.)
+
