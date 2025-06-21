@@ -237,6 +237,17 @@ chronic_columns = ["Diabetic", "Stroke", "Asthma", "KidneyDisease", "SkinCancer"
 radar_data = {col: (heart_df[col] == "Yes").mean() * 100 for col in chronic_columns}
 radar_df = pd.DataFrame({"Condition": list(radar_data.keys()), "Percentage": list(radar_data.values())})
 
+# 1. Stacked Bar: Smoking & Stroke vs Heart Disease by Gender
+st.subheader("🚬 Smoking & Stroke Rates by Gender")
+
+heart_df = df[df["HeartDisease"] == "Yes"]
+
+smoke_stroke = heart_df.groupby("Sex")[["Smoking", "Stroke"]].apply(lambda x: (x == "Yes").mean() * 100).reset_index()
+smoke_stroke_melted = pd.melt(smoke_stroke, id_vars="Sex", var_name="Condition", value_name="Percentage")
+
+fig_smoke_stroke = px.bar(smoke_stroke_melted, x="Sex", y="Percentage", color="Condition", barmode="stack", title="Smoking & Stroke Among Heart Disease Patients")
+st.plotly_chart(fig_smoke_stroke, use_container_width=True)
+
 # 2. Bar: General Health Perception Among Heart Disease Patients
 st.subheader("📋 General Health Status")
 
@@ -274,3 +285,13 @@ fig5 = go.Figure(data=go.Scatterpolar(
 fig5.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), title="Chronic Conditions Radar")
 st.plotly_chart(fig5, use_container_width=True)
 
+# 6. KPIs: Sleep, BMI, Excellent Health %
+st.subheader("🔢 Key Health Indicators (Heart Disease Patients)")
+avg_sleep = round(heart_df["SleepTime"].mean(), 1)
+avg_bmi = round(heart_df["BMI"].mean(), 1)
+excellent_health = round((heart_df["GenHealth"] == "Excellent").mean() * 100, 1)
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Avg Sleep Time (hrs)", avg_sleep)
+col2.metric("Avg BMI", avg_bmi)
+col3.metric("% Reporting Excellent Health", f"{excellent_health}%")
