@@ -36,6 +36,7 @@ with st.sidebar:
 
 # Load CSV
 csv_filename = "heart_2020_cleaned (1).csv"
+
 if not os.path.exists(csv_filename):
     st.error("❌ CSV file not found.")
     st.stop()
