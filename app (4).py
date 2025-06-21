@@ -161,25 +161,6 @@ sunburst_fig = px.sunburst(
 )
 st.plotly_chart(sunburst_fig)
 
-st.subheader("🔗 Parallel Categories: Lifestyle vs Heart Disease")
-parallel_df = df[["Smoking", "AlcoholDrinking", "HeartDisease"]]
-fig_parallel = px.parallel_categories(
-    parallel_df,
-    dimensions=["Smoking", "AlcoholDrinking", "HeartDisease"],
-    color_continuous_scale=px.colors.sequential.Inferno,
-    title="Lifestyle Habits and Heart Disease Relationship"
-)
-st.plotly_chart(fig_parallel)
-
-st.subheader("🔗 Lifestyle vs Heart Disease (Parallel Categories)")
-fig_parallel_2 = px.parallel_categories(
-    df[["Smoking", "AlcoholDrinking", "HeartDisease"]],
-    dimensions=["Smoking", "AlcoholDrinking", "HeartDisease"],
-    color_continuous_scale=px.colors.sequential.Viridis,
-    title="Variant View: Lifestyle and Heart Disease"
-)
-st.plotly_chart(fig_parallel_2)
-
 st.subheader("🔥 Heatmap: Conditions by Heart Disease Status")
 condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
 heat_df = df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
