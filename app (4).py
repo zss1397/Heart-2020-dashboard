@@ -45,9 +45,7 @@ try:
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
     st.stop()
-
-st.success(f"✅ CSV loaded successfully. Shape: {df.shape}")
-
+    
 # Sidebar filters with unique keys
 st.sidebar.header("🧮 Filter the Data")
 gender = st.sidebar.multiselect("Select Sex", df["Sex"].unique(), default=df["Sex"].unique(), key="gender_filter")
