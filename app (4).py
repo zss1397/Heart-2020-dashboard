@@ -380,4 +380,22 @@ if filtered_df.empty:
 else:
     pass  # Or you can add actual visualizations here
 
+# Donut Chart: Heart Disease Distribution (All Data)
+st.subheader("🍩 Heart Disease Donut Chart (All Data)")
+
+donut_counts = df["HeartDisease"].value_counts()
+if not donut_counts.empty:
+    fig_donut, ax_donut = plt.subplots()
+    wedges, texts, autotexts = ax_donut.pie(
+        donut_counts.values,
+        labels=donut_counts.index,
+        autopct='%1.1f%%',
+        startangle=90,
+        wedgeprops=dict(width=0.4)  # This creates the "donut hole"
+    )
+    ax_donut.axis('equal')
+    ax_donut.set_title("Heart Disease Distribution (Donut Style)", fontsize=14)
+    st.pyplot(fig_donut)
+else:
+    st.warning("⚠️ No data available for donut chart.")
 
