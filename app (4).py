@@ -275,57 +275,57 @@ st.markdown("## 🔥 Key Heart Disease Risk Factors")
 # 1. Smoking Status
 st.subheader("🚬 Heart Disease Rate by Smoking Status")
 smoke_hd = df.groupby("Smoking")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
+fig_smoke = px.bar(
     smoke_hd,
     barmode="group",
     labels={"value": "% of Group", "Smoking": "Smoking Status", "variable": "Heart Disease"},
     title="Heart Disease Rate by Smoking Status"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_smoke, use_container_width=True)
 
 # 2. Diabetic Status
 st.subheader("🩸 Heart Disease Rate by Diabetic Status")
 diab_hd = df.groupby("Diabetic")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
+fig_diab = px.bar(
     diab_hd,
     barmode="group",
     labels={"value": "% of Group", "Diabetic": "Diabetic Status", "variable": "Heart Disease"},
     title="Heart Disease Rate by Diabetic Status"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_diab, use_container_width=True)
 
 # 3. Alcohol Drinking
 st.subheader("🍺 Heart Disease Rate by Alcohol Drinking")
 alc_hd = df.groupby("AlcoholDrinking")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
+fig_alc = px.bar(
     alc_hd,
     barmode="group",
     labels={"value": "% of Group", "AlcoholDrinking": "Alcohol Drinking", "variable": "Heart Disease"},
     title="Heart Disease Rate by Alcohol Drinking"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_alc, use_container_width=True)
 
 # 4. Stroke History
 st.subheader("🧠 Heart Disease Rate by Stroke History")
 stroke_hd = df.groupby("Stroke")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
+fig_stroke = px.bar(
     stroke_hd,
     barmode="group",
     labels={"value": "% of Group", "Stroke": "Stroke History", "variable": "Heart Disease"},
     title="Heart Disease Rate by Stroke History"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_stroke, use_container_width=True)
 
 # 5. Physical Activity
 st.subheader("🏃‍♂️ Heart Disease Rate by Physical Activity")
 physact_hd = df.groupby("PhysicalActivity")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
+fig_phys = px.bar(
     physact_hd,
     barmode="group",
     labels={"value": "% of Group", "PhysicalActivity": "Physical Activity", "variable": "Heart Disease"},
     title="Heart Disease Rate by Physical Activity"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_phys, use_container_width=True)
 
 # 6. BMI Grouping
 st.subheader("⚖️ Heart Disease Rate by BMI Group")
@@ -333,21 +333,21 @@ bmi_bins = [0, 18.5, 25, 30, 100]
 bmi_labels = ['Underweight', 'Normal', 'Overweight', 'Obese']
 df['BMI_Group'] = pd.cut(df['BMI'], bins=bmi_bins, labels=bmi_labels)
 bmi_hd = df.groupby("BMI_Group")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
+fig_bmi = px.bar(
     bmi_hd,
     barmode="group",
     labels={"value": "% of Group", "BMI_Group": "BMI Group", "variable": "Heart Disease"},
     title="Heart Disease Rate by BMI Group"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_bmi, use_container_width=True)
 
 # 7. General Health
 st.subheader("🩺 Heart Disease Rate by General Health")
 gen_hd = df.groupby("GenHealth")["HeartDisease"].value_counts(normalize=True).unstack().fillna(0) * 100
-fig = px.bar(
+fig_gen = px.bar(
     gen_hd,
     barmode="group",
     labels={"value": "% of Group", "GenHealth": "General Health", "variable": "Heart Disease"},
     title="Heart Disease Rate by General Health"
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_gen, use_container_width=True)
