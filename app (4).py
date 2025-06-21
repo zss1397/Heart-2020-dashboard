@@ -198,11 +198,6 @@ ax.set_title("BMI Distribution by Heart Disease Status")
 ax.set_xlabel("BMI")
 st.pyplot(fig)
 
-# 📌 Filter dataset to only heart disease patients
-heart_df = df[df["HeartDisease"] == "Yes"]
-
-st.markdown("## 🧠 Advanced Visuals for Heart Disease Patients")
-
 # 1. Stacked Bar: Smoking & Stroke vs Heart Disease by Gender
 st.subheader("🚬 Smoking & Stroke Rates by Gender")
 
