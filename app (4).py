@@ -154,4 +154,12 @@ ax.set_xlabel("Number of People")
 ax.legend(loc="lower right")
 st.pyplot(fig)
 
+# Histogram of Sleep Time
+st.subheader("🛌 Sleep Time Distribution")
+
+fig, ax = plt.subplots()
+sns.histplot(df["SleepTime"], bins=20, kde=True, color="purple", ax=ax)
+ax.set_title("Distribution of Sleep Time")
+ax.set_xlabel("Hours of Sleep")
+st.pyplot(fig)
 
