@@ -140,4 +140,18 @@ fig = px.box(df, x="GenHealth", y="BMI", color="GenHealth",
              title="BMI Boxplot by General Health", points="all")
 st.plotly_chart(fig)
 
+# Diverging Bar Chart: General Health vs Heart Disease Status
+st.subheader("🟦🟥 General Health Perception by Heart Disease Status")
+
+gen_health = df.groupby(["GenHealth", "HeartDisease"]).size().unstack().fillna(0)
+gen_health = gen_health.loc[["Excellent", "Very good", "Good", "Fair", "Poor"]]  # ordered
+
+fig, ax = plt.subplots()
+ax.barh(gen_health.index, -gen_health["No"], label="No Heart Disease", color="skyblue")
+ax.barh(gen_health.index, gen_health["Yes"], label="With Heart Disease", color="salmon")
+ax.set_title("General Health Perception by Heart Disease Status")
+ax.set_xlabel("Number of People")
+ax.legend(loc="lower right")
+st.pyplot(fig)
+
 
