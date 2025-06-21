@@ -7,11 +7,32 @@ import numpy as np
 import os
 import plotly.graph_objects as go
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Heart Disease Insights Dashboard", layout="wide")
 
-# Title
-st.title("❤️ Heart Disease Indicators Dashboard (2020)")
-st.markdown("Analyze risk factors for heart disease using CDC BRFSS 2020 data.")
+st.title("🫀 Heart Disease Insights Dashboard")
+st.markdown("""
+Welcome!  
+This dashboard helps you explore the profile of heart disease patients and key risk factors using the CDC BRFSS 2020 data.
+
+- **Profile & Distribution**: See who is affected and how
+- **Risk Factors**: Explore what increases the risk
+- **Summary**: Key findings and recommendations
+
+Use the sidebar filters to dive deeper!
+""")
+st.markdown("---")
+
+with st.sidebar:
+    st.header("About")
+    st.markdown("""
+    **Heart Disease Dashboard**  
+    Built using CDC 2020 BRFSS Data.
+
+    - [Dataset info](https://www.cdc.gov/brfss/annual_data/annual_2020.html)
+    - Built by [Your Name], 2025
+    """)
+    st.markdown("---")
+    st.info("Select filters (coming soon) to personalize your view.")
 
 # Load CSV
 csv_filename = "heart_2020_cleaned (1).csv"
