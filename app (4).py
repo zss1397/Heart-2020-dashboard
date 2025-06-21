@@ -178,3 +178,13 @@ fig, ax = plt.subplots()
 sns.heatmap(df[["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]].corr(), annot=True, cmap="coolwarm", ax=ax)
 ax.set_title("Correlation Matrix of Health Metrics")
 st.pyplot(fig)
+
+# BMI Distribution by Heart Disease
+st.subheader("⚖️ BMI Distribution by Heart Disease Status")
+
+fig, ax = plt.subplots()
+sns.kdeplot(data=df, x="BMI", hue="HeartDisease", fill=True, common_norm=False, alpha=0.4, ax=ax)
+ax.set_title("BMI Distribution by Heart Disease Status")
+ax.set_xlabel("BMI")
+st.pyplot(fig)
+
