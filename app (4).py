@@ -21,17 +21,21 @@ hd_df = df[df["HeartDisease"] == "Yes"]
 nhd_df = df[df["HeartDisease"] == "No"]
 
 st.markdown(
-    "<div style='text-align:center; margin-bottom:0.1em;'><span style='font-size:1.1rem; font-weight:600;'>💖 Heart Disease Insights</span></div>",
+    """
+    <div style='text-align:center; margin-bottom:-1em; margin-top:-2em;'>
+        <span style='font-size:1.2rem; font-weight:600;'>💖 Heart Disease Insights</span><br>
+        <span style='font-size:0.95rem; color:#666;'>CDC BRFSS 2020 - Main Risk Factors & Patient Profiles</span>
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
-kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
-kpi1.metric("❤️ Patients", f"{len(hd_df):,}")
+kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5, gap="small")
+kpi1.metric("❤️ Heart Disease Patients", f"{len(hd_df):,}")
 kpi2.metric("⚖️ Avg BMI", f"{hd_df['BMI'].mean():.1f}")
-kpi3.metric("🚬 Smoking", f"{(hd_df['Smoking'] == 'Yes').mean()*100:.1f}%")
-kpi4.metric("🍺 Alcohol", f"{(hd_df['AlcoholDrinking'] == 'Yes').mean()*100:.1f}%")
-kpi5.metric("🏃 Activity", f"{(hd_df['PhysicalActivity'] == 'Yes').mean()*100:.1f}%")
-
+kpi3.metric("🚬 Smoking Rate", f"{(hd_df['Smoking'] == 'Yes').mean()*100:.1f}%")
+kpi4.metric("🍺 Alcohol Use Rate", f"{(hd_df['AlcoholDrinking'] == 'Yes').mean()*100:.1f}%")
+kpi5.metric("🏃 Physical Activity", f"{(hd_df['PhysicalActivity'] == 'Yes').mean()*100:.1f}%")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
