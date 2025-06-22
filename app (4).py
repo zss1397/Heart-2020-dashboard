@@ -85,11 +85,14 @@ with colB:
 
 st.markdown("---")
 
-fig, ax = plt.subplots(figsize=(3.5, 2.2))  # Keep this small!
+st.subheader("🔥 Heatmap: Conditions by Heart Disease Status")
+condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
+heat_df = df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
+fig, ax = plt.subplots(figsize=(3.5, 2.2))  # or whatever size you want
 sns.heatmap(
     heat_df,
     annot=True,
-    cmap="RdBu",         # <--- This is the key change!
+    cmap="RdBu",    # or "YlOrRd", "coolwarm", etc.
     fmt=".1f",
     ax=ax,
     cbar=False,
@@ -102,6 +105,7 @@ plt.xticks(fontsize=8)
 plt.yticks(fontsize=8)
 plt.tight_layout()
 st.pyplot(fig)
+
 
 # --- More compact layout (Optional: Add more summary plots as needed) ---
 
