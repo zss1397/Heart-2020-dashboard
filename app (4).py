@@ -56,32 +56,53 @@ with colA:
     )
     st.plotly_chart(fig_gender, use_container_width=True)
 
-# Main Risk Factors Bar Chart
-with colB:
-    st.subheader("🌡️ Key Risk Factors Among Heart Disease Patients")
-    # List of main risk factors to display
-    risk_factors = {
-        "Smoking": (hd_df["Smoking"] == "Yes").mean() * 100,
-        "Alcohol Drinking": (hd_df["AlcoholDrinking"] == "Yes").mean() * 100,
-        "Diabetic": (hd_df["Diabetic"] == "Yes").mean() * 100,
-        "Physical Activity": (hd_df["PhysicalActivity"] == "Yes").mean() * 100,
-        "Stroke": (hd_df["Stroke"] == "Yes").mean() * 100,
-        "Difficulty Walking": (hd_df["DiffWalking"] == "Yes").mean() * 100,
-        "Asthma": (hd_df["Asthma"] == "Yes").mean() * 100,
-        "Kidney Disease": (hd_df["KidneyDisease"] == "Yes").mean() * 100,
-        "Skin Cancer": (hd_df["SkinCancer"] == "Yes").mean() * 100,
-    }
-    fig_risk = px.bar(
-        x=list(risk_factors.keys()),
-        y=list(risk_factors.values()),
-        labels={"x": "Risk Factor", "y": "% of Patients"},
-        title="Prevalence of Risk Factors",
-        color=list(risk_factors.keys()),
-        color_discrete_sequence=px.colors.qualitative.Set3,
-        height=350
-    )
-    fig_risk.update_layout(showlegend=False, yaxis=dict(range=[0,100]))
-    st.plotly_chart(fig_risk, use_container_width=True)
+st.subheader("🌡️ Key Risk Factors: With vs Without Heart Disease")
+
+risk_factors = [
+    "Smoking", "AlcoholDrinking", "Diabetic", "PhysicalActivity",
+    "Stroke", "DiffWalking", "Asthma", "KidneyDisease", "SkinCancer"
+]
+
+# Calculate prevalence for each group
+hd_risk = []
+nhd_risk = []
+
+for col in risk_factors:
+    # For PhysicalActivity, we flip "Yes" to "No" to indicate inactivity as risk
+    if col == "PhysicalActivity":
+        hd_risk.append((hd_df[col] == "No").mean() * 100)
+        nhd_risk.append((nhd_df[col] == "No").mean() * 100)
+    else:
+        hd_risk.append((hd_df[col] == "Yes").mean() * 100)
+        nhd_risk.append((nhd_df[col] == "Yes").mean() * 100)
+
+# Prepare DataFrame for plotting
+risk_df = pd.DataFrame({
+    "Risk Factor": [
+        "Smoking", "Alcohol Drinking", "Diabetic", "Not Physically Active",
+        "Stroke", "Difficulty Walking", "Asthma", "Kidney Disease", "Skin Cancer"
+    ],
+    "Heart Disease": hd_risk,
+    "No Heart Disease": nhd_risk
+})
+
+# Melt for seaborn
+melt_df = risk_df.melt(id_vars="Risk Factor", value_vars=["Heart Disease", "No Heart Disease"],
+                       var_name="Heart Disease Status", value_name="Prevalence (%)")
+
+fig, ax = plt.subplots(figsize=(7, 2.8))
+sns.barplot(
+    data=melt_df,
+    x="Risk Factor", y="Prevalence (%)",
+    hue="Heart Disease Status",
+    palette=["#e63946", "#457b9d"]
+)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=30, ha="right")
+ax.set_ylabel("% of Patients")
+ax.set_xlabel("")
+ax.set_title("Risk Factor Prevalence by Heart Disease Status", fontsize=14, fontweight="bold", loc="left")
+plt.tight_layout()
+st.pyplot(fig)
 
 st.markdown("---")
 
