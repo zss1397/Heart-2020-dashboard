@@ -6,25 +6,24 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # --- GLOBAL FONT AND PADDING FIX ---
-plt.rcParams.update({'font.size': 8, 'font.family': 'sans-serif'})
-
+plt.rcParams.update({'font.size': 10, 'font.family': 'sans-serif'})
 st.set_page_config(page_title="Heart Disease Dashboard", layout="wide")
 
 st.markdown("""
     <style>
     html, body, [class*="css"]  {
-        font-size: 12px !important;
+        font-size: 14px !important;
         font-family: 'Segoe UI', 'Roboto', Arial, sans-serif !important;
     }
     .block-container {
-        padding-top: 0.3rem;
-        padding-bottom: 0.3rem;
-        padding-left: 1.2rem;
-        padding-right: 1.2rem;
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
     .st-emotion-cache-10trblm {margin-bottom: 0.15rem;}
     h1, h2, h3, h4, h5, h6 {
-        font-size: 1rem !important;
+        font-size: 1.1rem !important;
         margin-bottom: 0.1rem !important;
     }
     </style>
@@ -44,57 +43,58 @@ except Exception as e:
 hd_df = df[df["HeartDisease"] == "Yes"]
 nhd_df = df[df["HeartDisease"] == "No"]
 
-# --- Ultra-compact header ---
-st.markdown(
-    "<div style='text-align:center; font-size:0.95rem; font-weight:600; margin-bottom:0.12em;'>💖 Heart Disease Insights</div>",
-    unsafe_allow_html=True
-)
-
-# --- KPI Bar with colored background ---
+# --- Header & KPIs (Cervix style) ---
 st.markdown(
     """
-    <div style='background-color:#f5f6fa; border-radius:8px; padding:0.28em 0.09em 0.28em 0.09em; margin-bottom:0.15em;'>
-    <div style='display:flex; justify-content:space-around;'>
-    <span style='font-size:0.85rem;'>❤️ {}</span>
-    <span style='font-size:0.85rem;'>⚖️ Avg BMI: {:.1f}</span>
-    <span style='font-size:0.85rem;'>🚬 Smoking: {:.1f}%</span>
-    <span style='font-size:0.85rem;'>🍺 Alcohol: {:.1f}%</span>
-    <span style='font-size:0.85rem;'>🏃 Activity: {:.1f}%</span>
+    <div style='text-align:center; font-size:1.25rem; font-weight:600; margin-bottom:0.5em; color:#b11f4a;'>
+        💖 Heart Disease Insights
     </div>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown(
+    """
+    <div style='background-color:#f7f7fa; border-radius:9px; padding:0.6em 0.4em 0.6em 0.4em; margin-bottom:1.1em;
+        display: flex; justify-content: center; gap: 3em;'>
+        <span style='font-size:1.08rem;'>❤️ {:,}</span>
+        <span style='font-size:1.08rem;'>⚖️ Avg BMI: {:.1f}</span>
+        <span style='font-size:1.08rem;'>🚬 Smoking: {:.1f}%</span>
+        <span style='font-size:1.08rem;'>🍺 Alcohol: {:.1f}%</span>
+        <span style='font-size:1.08rem;'>🏃 Activity: {:.1f}%</span>
     </div>
     """.format(
-        f"{len(hd_df):,}",
+        len(hd_df),
         hd_df['BMI'].mean(),
-        (hd_df['Smoking'] == 'Yes').mean()*100,
-        (hd_df['AlcoholDrinking'] == 'Yes').mean()*100,
-        (hd_df['PhysicalActivity'] == 'Yes').mean()*100,
+        (hd_df['Smoking'] == 'Yes').mean() * 100,
+        (hd_df['AlcoholDrinking'] == 'Yes').mean() * 100,
+        (hd_df['PhysicalActivity'] == 'Yes').mean() * 100,
     ),
     unsafe_allow_html=True
 )
 
-# --- 2 rows, 3 columns grid for charts ---
-row1 = st.columns(3, gap="small")
-row2 = st.columns(3, gap="small")
+# --- 1st row: 3 columns (Gender Pie, Risk Bar, Heatmap) ---
+row1 = st.columns([1, 1.4, 1.3], gap="small")
 
-# --- Chart 1: Gender Pie ---
+# --- Chart 1: Gender Pie (slimmer) ---
 with row1[0]:
     gender_counts = hd_df["Sex"].value_counts()
     fig_gender = px.pie(
         names=gender_counts.index,
         values=gender_counts.values,
-        hole=0.65,
-        height=120,
-        width=120,
+        hole=0.6,
+        height=220,
+        width=220,
         color_discrete_sequence=px.colors.sequential.RdBu
     )
-    fig_gender.update_traces(textinfo="percent+label", textfont_size=8)
+    fig_gender.update_traces(textinfo="percent+label", textfont_size=12)
     fig_gender.update_layout(
         margin=dict(t=0, b=0, l=0, r=0), showlegend=False, 
-        font=dict(size=8, family="Segoe UI, Roboto, Arial, sans-serif")
+        font=dict(size=12, family="Segoe UI, Roboto, Arial, sans-serif")
     )
+    st.markdown("<div style='text-align:center; font-size:0.98rem; margin-bottom:0.3em;'>By Gender</div>", unsafe_allow_html=True)
     st.plotly_chart(fig_gender, use_container_width=True)
 
-# --- Chart 2: Risk Factors Bar ---
+# --- Chart 2: Risk Factors Bar (wider, compact) ---
 with row1[1]:
     risk_factors = [
         "Smoking", "AlcoholDrinking", "Diabetic", "PhysicalActivity",
@@ -119,26 +119,27 @@ with row1[1]:
     })
     melt_df = risk_df.melt(id_vars="Risk Factor", value_vars=["Heart Disease", "No Heart Disease"],
                         var_name="HD", value_name="Prevalence (%)")
-    fig, ax = plt.subplots(figsize=(1.1, 1))
+    fig, ax = plt.subplots(figsize=(3.3, 2.1))
     sns.barplot(
         data=melt_df,
         x="Risk Factor", y="Prevalence (%)",
         hue="HD",
         palette=["#e63946", "#457b9d"]
     )
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right", fontsize=7)
-    ax.set_ylabel("%", fontsize=7)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=40, ha="right", fontsize=10)
+    ax.set_ylabel("%", fontsize=11)
     ax.set_xlabel("")
-    ax.set_title("", fontsize=8)
-    plt.tight_layout(pad=0.4)
-    ax.legend(fontsize=6)
+    ax.set_title("")
+    ax.legend(fontsize=9, title='')
+    plt.tight_layout(pad=0.5)
+    st.markdown("<div style='text-align:center; font-size:0.98rem; margin-bottom:0.3em;'>Risk Factors</div>", unsafe_allow_html=True)
     st.pyplot(fig)
 
-# --- Chart 3: Heatmap ---
+# --- Chart 3: Heatmap (wider, right-aligned) ---
 with row1[2]:
     condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
     heat_df = df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
-    fig, ax = plt.subplots(figsize=(0.95, 1))
+    fig, ax = plt.subplots(figsize=(2.3, 2.1))
     sns.heatmap(
         heat_df,
         annot=True,
@@ -146,17 +147,21 @@ with row1[2]:
         fmt=".1f",
         ax=ax,
         cbar=False,
-        annot_kws={"size": 7}
+        annot_kws={"size": 11}
     )
-    ax.set_title("", fontsize=8)
-    ax.set_xlabel("", fontsize=7)
-    ax.set_ylabel("", fontsize=7)
-    plt.xticks(fontsize=7)
-    plt.yticks(fontsize=7)
+    ax.set_title("")
+    ax.set_xlabel("", fontsize=10)
+    ax.set_ylabel("", fontsize=10)
+    plt.xticks(fontsize=10)
+    plt.yticks(fontsize=10)
     plt.tight_layout(pad=0.4)
+    st.markdown("<div style='text-align:center; font-size:0.98rem; margin-bottom:0.3em;'>Comorbidities (%)</div>", unsafe_allow_html=True)
     st.pyplot(fig)
 
-# --- Chart 4: Age Distribution ---
+# --- 2nd row: 2 wide charts ---
+row2 = st.columns([1, 1], gap="small")
+
+# --- Chart 4: Age Distribution (wide bar) ---
 with row2[0]:
     age_counts = hd_df["AgeCategory"].value_counts().sort_index()
     fig_age = px.bar(
@@ -164,16 +169,17 @@ with row2[0]:
         y=age_counts.values,
         color=age_counts.index,
         color_discrete_sequence=px.colors.sequential.Viridis,
-        height=120,
-        width=120
+        height=250
     )
     fig_age.update_layout(
-        showlegend=False, font=dict(size=8, family="Segoe UI, Roboto, Arial, sans-serif"),
-        margin=dict(t=0, b=0, l=0, r=0)
+        showlegend=False, font=dict(size=12, family="Segoe UI, Roboto, Arial, sans-serif"),
+        margin=dict(t=10, b=0, l=0, r=0),
+        xaxis_title='Age Category', yaxis_title='Count'
     )
+    st.markdown("<div style='text-align:center; font-size:0.98rem; margin-bottom:0.3em;'>By Age Group</div>", unsafe_allow_html=True)
     st.plotly_chart(fig_age, use_container_width=True)
 
-# --- Chart 5: GenHealth ---
+# --- Chart 5: GenHealth (wide grouped bar) ---
 with row2[1]:
     df_summary = (
         df.groupby(['HeartDisease', 'GenHealth'])
@@ -189,19 +195,11 @@ with row2[1]:
         barmode="group",
         labels={"GenHealth": "General Health", "percent": "% of Group", "HeartDisease": "Heart Disease"},
         color_discrete_sequence=px.colors.qualitative.Pastel,
-        height=120,
-        width=120
+        height=250
     )
     fig.update_layout(
-        font=dict(size=8, family="Segoe UI, Roboto, Arial, sans-serif"),
-        margin=dict(t=0, b=0, l=0, r=0)
+        font=dict(size=12, family="Segoe UI, Roboto, Arial, sans-serif"),
+        margin=dict(t=10, b=0, l=0, r=0)
     )
+    st.markdown("<div style='text-align:center; font-size:0.98rem; margin-bottom:0.3em;'>By General Health</div>", unsafe_allow_html=True)
     st.plotly_chart(fig, use_container_width=True)
-
-# --- Last slot: Leave blank or place your logo, or a short insight ---
-with row2[2]:
-    st.markdown(
-        "<div style='height:140px; display:flex; align-items:center; justify-content:center; color:#aaa;'>"
-        "Powered by Streamlit</div>",
-        unsafe_allow_html=True
-    )
