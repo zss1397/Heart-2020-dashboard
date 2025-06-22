@@ -82,36 +82,28 @@ with colB:
 
 st.markdown("---")
 
-# --- Correlation Heatmaps (With & Without Heart Disease) ---
-st.subheader("🔗 Feature Correlation: With vs Without Heart Disease")
-colC, colD = st.columns(2)
-# Select only numeric columns
-hd_corr = hd_df.select_dtypes(include="number").corr()
-nhd_corr = nhd_df.select_dtypes(include="number").corr()
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-with colC:
-    st.write("**With Heart Disease**")
-    fig_hd = px.imshow(
-        hd_corr,
-        color_continuous_scale="RdBu",
-        title="Correlation (With Heart Disease)",
-        aspect="auto",
-        height=300
-    )
-    st.plotly_chart(fig_hd, use_container_width=True)
+corr_columns = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
 
-with colD:
-    st.write("**Without Heart Disease**")
-    fig_nhd = px.imshow(
-        nhd_corr,
-        color_continuous_scale="RdBu",
-        title="Correlation (Without Heart Disease)",
-        aspect="auto",
-        height=300
-    )
-    st.plotly_chart(fig_nhd, use_container_width=True)
+corr_no_hd = df[df["HeartDisease"] == "No"][corr_columns].corr()
+corr_hd = df[df["HeartDisease"] == "Yes"][corr_columns].corr()
 
-st.markdown("---")
+fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(7, 9), sharex=True, sharey=True)
+
+# Top: No Heart Disease
+sns.heatmap(corr_no_hd, annot=True, cmap="coolwarm", vmin=-1, vmax=1, ax=axes[0])
+axes[0].set_title("No Heart Disease")
+
+# Bottom: With Heart Disease
+sns.heatmap(corr_hd, annot=True, cmap="coolwarm", vmin=-1, vmax=1, ax=axes[1])
+axes[1].set_title("With Heart Disease")
+
+plt.tight_layout()
+st.subheader("🔍 Correlation Heatmaps: No Heart Disease vs Heart Disease")
+st.pyplot(fig)
+
 
 # --- More compact layout (Optional: Add more summary plots as needed) ---
 
