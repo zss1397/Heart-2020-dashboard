@@ -197,3 +197,13 @@ with col4:
     st.plotly_chart(fig_diab, use_container_width=False)
     st.warning("Diabetes is a strong risk factor.")
 
+import matplotlib.pyplot as plt
+
+st.header("📈 Correlation Heatmap")
+corr = df.corr(numeric_only=True)
+fig, ax = plt.subplots(figsize=(6, 4))
+sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm", ax=ax, cbar=False)
+ax.set_title("Correlation Heatmap")
+st.pyplot(fig)
+
+
