@@ -84,34 +84,18 @@ st.markdown("---")
 
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
 
-features = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
-
-corr_no = df[df["HeartDisease"] == "No"][features].corr()
-corr_yes = df[df["HeartDisease"] == "Yes"][features].corr()
-
-# Stack top (No) and bottom (Yes)
-combined_corr = np.vstack([corr_no.values, corr_yes.values])
-row_labels = [f"{f} (No)" for f in features] + [f"{f} (Yes)" for f in features]
-
-fig, ax = plt.subplots(figsize=(5.5, 4))  # <-- SMALLER SIZE
-sns.heatmap(
-    combined_corr,
-    annot=True,
-    fmt=".2f",
-    xticklabels=features,
-    yticklabels=row_labels,
-    cmap="YlOrRd",
-    vmin=-1, vmax=1,
-    linewidths=0.2,
-    cbar=True,
-    ax=ax,
-    annot_kws={"size": 7}
-)
-ax.set_title("Correlation Matrix: With and Without Heart Disease", fontsize=11)
-plt.tight_layout()
+st.subheader("🔥 Heatmap: Conditions by Heart Disease Status")
+condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
+# Group by heart disease status and calculate % with each condition
+heat_df = df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
+fig, ax = plt.subplots(figsize=(6, 3))  # adjust figsize to fit the page
+sns.heatmap(heat_df, annot=True, cmap="YlOrRd", fmt=".1f", ax=ax, cbar=False)
+ax.set_title("Percentage with Each Condition by Heart Disease Status")
+ax.set_xlabel("Condition")
+ax.set_ylabel("Heart Disease")
 st.pyplot(fig)
+
 
 # --- More compact layout (Optional: Add more summary plots as needed) ---
 
