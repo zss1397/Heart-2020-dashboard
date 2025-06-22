@@ -24,14 +24,9 @@ hd_df = df[df["HeartDisease"] == "Yes"]
 nhd_df = df[df["HeartDisease"] == "No"]
 
 # --- KPIs ---
+st.markdown("<h1 style='text-align: center; margin-bottom:0;'>💖 Heart Disease Insights Dashboard</h1>", unsafe_allow_html=True)
 st.markdown(
-    """
-    <div style='text-align:center; margin-bottom: 0.3em;'>
-        <span style='font-size:2rem; font-weight:700;'>💖 Heart Disease Insights</span>
-        <br>
-        <span style='font-size:1rem; color:#555;'>CDC BRFSS 2020 - Main Risk Factors & Patient Profiles</span>
-    </div>
-    """,
+    "<div style='text-align: center; margin-bottom:15px;'>Explore the main risk factors, trends, and correlations among heart disease patients (CDC BRFSS 2020).</div>",
     unsafe_allow_html=True
 )
 
