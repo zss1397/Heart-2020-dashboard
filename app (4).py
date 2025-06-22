@@ -82,27 +82,41 @@ with colB:
 
 st.markdown("---")
 
-import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 import seaborn as sns
+import matplotlib.pyplot as plt
 
-corr_columns = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
+# Choose columns of interest
+cols = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
 
-corr_no_hd = df[df["HeartDisease"] == "No"][corr_columns].corr()
-corr_hd = df[df["HeartDisease"] == "Yes"][corr_columns].corr()
+# Compute correlations for both groups
+corr_no = df[df["HeartDisease"] == "No"][cols].corr()
+corr_yes = df[df["HeartDisease"] == "Yes"][cols].corr()
 
-fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(7, 9), sharex=True, sharey=True)
+# Stack the two correlation matrices for easier comparison
+# We'll use a "melt" to create a long-form dataframe and add a label
+corr_no_long = corr_no.reset_index().melt(id_vars="index")
+corr_no_long["HeartDisease"] = "No"
+corr_yes_long = corr_yes.reset_index().melt(id_vars="index")
+corr_yes_long["HeartDisease"] = "Yes"
 
-# Top: No Heart Disease
-sns.heatmap(corr_no_hd, annot=True, cmap="coolwarm", vmin=-1, vmax=1, ax=axes[0])
-axes[0].set_title("No Heart Disease")
+corr_long = pd.concat([corr_no_long, corr_yes_long])
 
-# Bottom: With Heart Disease
-sns.heatmap(corr_hd, annot=True, cmap="coolwarm", vmin=-1, vmax=1, ax=axes[1])
-axes[1].set_title("With Heart Disease")
+# Create a "pivot" to get a big matrix with (Variable, HeartDisease) pairs
+pivot = corr_long.pivot_table(
+    index=["index", "HeartDisease"], columns=["variable"], values="value"
+)
 
+# To display as a heatmap, let's flatten the MultiIndex for rows
+pivot.index = [f"{idx} ({hd})" for idx, hd in pivot.index]
+
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(pivot, annot=True, cmap="coolwarm", vmin=-1, vmax=1, ax=ax)
+ax.set_title("Correlation Matrix: With and Without Heart Disease")
 plt.tight_layout()
-st.subheader("🔍 Correlation Heatmaps: No Heart Disease vs Heart Disease")
 st.pyplot(fig)
+
 
 
 # --- More compact layout (Optional: Add more summary plots as needed) ---
