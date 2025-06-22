@@ -158,11 +158,6 @@ sns.heatmap(heat_df, annot=True, cmap="YlOrRd", fmt=".1f", ax=ax)
 ax.set_title("Percentage with Each Condition by Heart Disease Status")
 st.pyplot(fig)
 
-st.subheader("📦 BMI Distribution by General Health")
-fig = px.box(df, x="GenHealth", y="BMI", color="GenHealth",
-             title="BMI Boxplot by General Health", points="all")
-st.plotly_chart(fig)
-
 # Diverging Bar Chart: General Health vs Heart Disease Status
 st.subheader("🟦🟥 General Health Perception by Heart Disease Status")
 
