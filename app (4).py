@@ -82,20 +82,23 @@ with colB:
 
 st.markdown("---")
 
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-st.subheader("🔥 Heatmap: Conditions by Heart Disease Status")
-condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
-# Group by heart disease status and calculate % with each condition
-heat_df = df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
-fig, ax = plt.subplots(figsize=(6, 3))  # adjust figsize to fit the page
-sns.heatmap(heat_df, annot=True, cmap="YlOrRd", fmt=".1f", ax=ax, cbar=False)
-ax.set_title("Percentage with Each Condition by Heart Disease Status")
-ax.set_xlabel("Condition")
-ax.set_ylabel("Heart Disease")
+fig, ax = plt.subplots(figsize=(3.5, 2.2))  # Keep this small!
+sns.heatmap(
+    heat_df,
+    annot=True,
+    cmap="RdBu",         # <--- This is the key change!
+    fmt=".1f",
+    ax=ax,
+    cbar=False,
+    annot_kws={"size": 8}
+)
+ax.set_title("Percentage with Each Condition by Heart Disease Status", fontsize=10)
+ax.set_xlabel("Condition", fontsize=8)
+ax.set_ylabel("Heart Disease", fontsize=8)
+plt.xticks(fontsize=8)
+plt.yticks(fontsize=8)
+plt.tight_layout()
 st.pyplot(fig)
-
 
 # --- More compact layout (Optional: Add more summary plots as needed) ---
 
