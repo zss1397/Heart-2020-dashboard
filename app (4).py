@@ -21,40 +21,55 @@ except Exception as e:
 hd_df = df[df["HeartDisease"] == "Yes"]
 nhd_df = df[df["HeartDisease"] == "No"]
 
-# --- Super Compact Header + KPIs ---
+# --- Ultra-compact header ---
 st.markdown(
-    """
-    <div style='text-align:center; margin-bottom:-1em; margin-top:-2em;'>
-        <span style='font-size:1.15rem; font-weight:600;'>💖 Heart Disease Insights</span><br>
-        <span style='font-size:0.93rem; color:#666;'>CDC BRFSS 2020 - Main Risk Factors & Patient Profiles</span>
-    </div>
-    """,
+    "<div style='text-align:center; font-size:1.1rem; font-weight:600; margin-bottom:0.3em;'>💖 Heart Disease Insights</div>",
     unsafe_allow_html=True
 )
-kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5, gap="small")
-kpi1.metric("❤️ Patients", f"{len(hd_df):,}")
-kpi2.metric("⚖️ Avg BMI", f"{hd_df['BMI'].mean():.1f}")
-kpi3.metric("🚬 Smoking", f"{(hd_df['Smoking'] == 'Yes').mean()*100:.1f}%")
-kpi4.metric("🍺 Alcohol", f"{(hd_df['AlcoholDrinking'] == 'Yes').mean()*100:.1f}%")
-kpi5.metric("🏃 Activity", f"{(hd_df['PhysicalActivity'] == 'Yes').mean()*100:.1f}%")
 
-# --- First row of charts (3 columns) ---
-col1, col2, col3 = st.columns(3)
+# --- KPI Bar with colored background ---
+st.markdown(
+    """
+    <div style='background-color:#f5f6fa; border-radius:8px; padding:0.6em 0.2em 0.6em 0.2em; margin-bottom:0.8em;'>
+    <div style='display:flex; justify-content:space-around;'>
+    <span style='font-size:1rem;'>❤️ {}</span>
+    <span style='font-size:1rem;'>⚖️ Avg BMI: {:.1f}</span>
+    <span style='font-size:1rem;'>🚬 Smoking: {:.1f}%</span>
+    <span style='font-size:1rem;'>🍺 Alcohol: {:.1f}%</span>
+    <span style='font-size:1rem;'>🏃 Activity: {:.1f}%</span>
+    </div>
+    </div>
+    """.format(
+        f"{len(hd_df):,}",
+        hd_df['BMI'].mean(),
+        (hd_df['Smoking'] == 'Yes').mean()*100,
+        (hd_df['AlcoholDrinking'] == 'Yes').mean()*100,
+        (hd_df['PhysicalActivity'] == 'Yes').mean()*100,
+    ),
+    unsafe_allow_html=True
+)
 
-with col1:
+# --- 2 rows, 3 columns grid for charts (leave last cell blank or use for logo) ---
+row1 = st.columns(3)
+row2 = st.columns(3)
+
+# --- Chart 1: Gender Pie ---
+with row1[0]:
     gender_counts = hd_df["Sex"].value_counts()
     fig_gender = px.pie(
         names=gender_counts.index,
         values=gender_counts.values,
         hole=0.65,
-        height=140,
+        height=200,
+        width=200,
         color_discrete_sequence=px.colors.sequential.RdBu
     )
-    fig_gender.update_traces(textinfo="percent+label", textfont_size=7)
-    fig_gender.update_layout(margin=dict(t=5, b=5, l=5, r=5), showlegend=False, font=dict(size=7))
+    fig_gender.update_traces(textinfo="percent+label", textfont_size=10)
+    fig_gender.update_layout(margin=dict(t=10, b=10, l=10, r=10), showlegend=False, font=dict(size=10))
     st.plotly_chart(fig_gender, use_container_width=True)
 
-with col2:
+# --- Chart 2: Risk Factors Bar ---
+with row1[1]:
     risk_factors = [
         "Smoking", "AlcoholDrinking", "Diabetic", "PhysicalActivity",
         "Stroke", "DiffWalking", "Asthma", "KidneyDisease", "SkinCancer"
@@ -78,24 +93,25 @@ with col2:
     })
     melt_df = risk_df.melt(id_vars="Risk Factor", value_vars=["Heart Disease", "No Heart Disease"],
                         var_name="HD", value_name="Prevalence (%)")
-    fig, ax = plt.subplots(figsize=(1.5, 1))
+    fig, ax = plt.subplots(figsize=(2.5, 1.4))
     sns.barplot(
         data=melt_df,
         x="Risk Factor", y="Prevalence (%)",
         hue="HD",
         palette=["#e63946", "#457b9d"]
     )
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right", fontsize=7)
-    ax.set_ylabel("%", fontsize=7)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right", fontsize=8)
+    ax.set_ylabel("%", fontsize=8)
     ax.set_xlabel("")
-    ax.set_title("", fontsize=7)
+    ax.set_title("", fontsize=9)
     plt.tight_layout()
     st.pyplot(fig)
 
-with col3:
+# --- Chart 3: Heatmap ---
+with row1[2]:
     condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
     heat_df = df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
-    fig, ax = plt.subplots(figsize=(1.15, 1))
+    fig, ax = plt.subplots(figsize=(1.6, 1.4))
     sns.heatmap(
         heat_df,
         annot=True,
@@ -103,32 +119,32 @@ with col3:
         fmt=".1f",
         ax=ax,
         cbar=False,
-        annot_kws={"size": 7}
+        annot_kws={"size": 8}
     )
-    ax.set_title("", fontsize=7)
-    ax.set_xlabel("", fontsize=7)
-    ax.set_ylabel("", fontsize=7)
-    plt.xticks(fontsize=7)
-    plt.yticks(fontsize=7)
+    ax.set_title("", fontsize=9)
+    ax.set_xlabel("", fontsize=8)
+    ax.set_ylabel("", fontsize=8)
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
     plt.tight_layout()
     st.pyplot(fig)
 
-# --- Second row of charts (2 columns: Age and GenHealth) ---
-col4, col5 = st.columns(2)
-
-with col4:
+# --- Chart 4: Age Distribution ---
+with row2[0]:
     age_counts = hd_df["AgeCategory"].value_counts().sort_index()
     fig_age = px.bar(
         x=age_counts.index,
         y=age_counts.values,
         color=age_counts.index,
         color_discrete_sequence=px.colors.sequential.Viridis,
-        height=130
+        height=200,
+        width=200
     )
-    fig_age.update_layout(showlegend=False, font=dict(size=7), margin=dict(t=5, b=5, l=5, r=5))
+    fig_age.update_layout(showlegend=False, font=dict(size=10), margin=dict(t=10, b=10, l=10, r=10))
     st.plotly_chart(fig_age, use_container_width=True)
 
-with col5:
+# --- Chart 5: GenHealth ---
+with row2[1]:
     df_summary = (
         df.groupby(['HeartDisease', 'GenHealth'])
         .size()
@@ -143,7 +159,16 @@ with col5:
         barmode="group",
         labels={"GenHealth": "General Health", "percent": "% of Group", "HeartDisease": "Heart Disease"},
         color_discrete_sequence=px.colors.qualitative.Pastel,
-        height=130
+        height=200,
+        width=200
     )
-    fig.update_layout(font=dict(size=7), margin=dict(t=5, b=5, l=5, r=5))
+    fig.update_layout(font=dict(size=10), margin=dict(t=10, b=10, l=10, r=10))
     st.plotly_chart(fig, use_container_width=True)
+
+# --- Last slot: Leave blank or place your logo, or a short insight ---
+with row2[2]:
+    st.markdown(
+        "<div style='height:210px; display:flex; align-items:center; justify-content:center; color:#aaa;'>"
+        "Powered by Streamlit</div>",
+        unsafe_allow_html=True
+    )
