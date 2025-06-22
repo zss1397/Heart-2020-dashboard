@@ -5,7 +5,30 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# --- GLOBAL FONT AND PADDING FIX ---
+plt.rcParams.update({'font.size': 8, 'font.family': 'sans-serif'})
+
 st.set_page_config(page_title="Heart Disease Dashboard", layout="wide")
+
+st.markdown("""
+    <style>
+    html, body, [class*="css"]  {
+        font-size: 12px !important;
+        font-family: 'Segoe UI', 'Roboto', Arial, sans-serif !important;
+    }
+    .block-container {
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+    }
+    .st-emotion-cache-10trblm {margin-bottom: 0.15rem;}
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 1rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # --- Load Data ---
 csv_filename = "heart_2020_cleaned (1).csv"
@@ -23,20 +46,20 @@ nhd_df = df[df["HeartDisease"] == "No"]
 
 # --- Ultra-compact header ---
 st.markdown(
-    "<div style='text-align:center; font-size:1rem; font-weight:600; margin-bottom:0.1em;'>💖 Heart Disease Insights</div>",
+    "<div style='text-align:center; font-size:0.95rem; font-weight:600; margin-bottom:0.12em;'>💖 Heart Disease Insights</div>",
     unsafe_allow_html=True
 )
 
 # --- KPI Bar with colored background ---
 st.markdown(
     """
-    <div style='background-color:#f5f6fa; border-radius:8px; padding:0.3em 0.1em 0.3em 0.1em; margin-bottom:0.2em;'>
+    <div style='background-color:#f5f6fa; border-radius:8px; padding:0.28em 0.09em 0.28em 0.09em; margin-bottom:0.15em;'>
     <div style='display:flex; justify-content:space-around;'>
-    <span style='font-size:0.9rem;'>❤️ {}</span>
-    <span style='font-size:0.9rem;'>⚖️ Avg BMI: {:.1f}</span>
-    <span style='font-size:0.9rem;'>🚬 Smoking: {:.1f}%</span>
-    <span style='font-size:0.9rem;'>🍺 Alcohol: {:.1f}%</span>
-    <span style='font-size:0.9rem;'>🏃 Activity: {:.1f}%</span>
+    <span style='font-size:0.85rem;'>❤️ {}</span>
+    <span style='font-size:0.85rem;'>⚖️ Avg BMI: {:.1f}</span>
+    <span style='font-size:0.85rem;'>🚬 Smoking: {:.1f}%</span>
+    <span style='font-size:0.85rem;'>🍺 Alcohol: {:.1f}%</span>
+    <span style='font-size:0.85rem;'>🏃 Activity: {:.1f}%</span>
     </div>
     </div>
     """.format(
@@ -49,7 +72,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- 2 rows, 3 columns grid for charts (leave last cell blank or use for logo) ---
+# --- 2 rows, 3 columns grid for charts ---
 row1 = st.columns(3, gap="small")
 row2 = st.columns(3, gap="small")
 
@@ -65,7 +88,10 @@ with row1[0]:
         color_discrete_sequence=px.colors.sequential.RdBu
     )
     fig_gender.update_traces(textinfo="percent+label", textfont_size=8)
-    fig_gender.update_layout(margin=dict(t=0, b=0, l=0, r=0), showlegend=False, font=dict(size=8))
+    fig_gender.update_layout(
+        margin=dict(t=0, b=0, l=0, r=0), showlegend=False, 
+        font=dict(size=8, family="Segoe UI, Roboto, Arial, sans-serif")
+    )
     st.plotly_chart(fig_gender, use_container_width=True)
 
 # --- Chart 2: Risk Factors Bar ---
@@ -104,7 +130,7 @@ with row1[1]:
     ax.set_ylabel("%", fontsize=7)
     ax.set_xlabel("")
     ax.set_title("", fontsize=8)
-    plt.tight_layout(pad=0.5)
+    plt.tight_layout(pad=0.4)
     ax.legend(fontsize=6)
     st.pyplot(fig)
 
@@ -127,7 +153,7 @@ with row1[2]:
     ax.set_ylabel("", fontsize=7)
     plt.xticks(fontsize=7)
     plt.yticks(fontsize=7)
-    plt.tight_layout(pad=0.5)
+    plt.tight_layout(pad=0.4)
     st.pyplot(fig)
 
 # --- Chart 4: Age Distribution ---
@@ -141,7 +167,10 @@ with row2[0]:
         height=120,
         width=120
     )
-    fig_age.update_layout(showlegend=False, font=dict(size=8), margin=dict(t=0, b=0, l=0, r=0))
+    fig_age.update_layout(
+        showlegend=False, font=dict(size=8, family="Segoe UI, Roboto, Arial, sans-serif"),
+        margin=dict(t=0, b=0, l=0, r=0)
+    )
     st.plotly_chart(fig_age, use_container_width=True)
 
 # --- Chart 5: GenHealth ---
@@ -163,7 +192,10 @@ with row2[1]:
         height=120,
         width=120
     )
-    fig.update_layout(font=dict(size=8), margin=dict(t=0, b=0, l=0, r=0))
+    fig.update_layout(
+        font=dict(size=8, family="Segoe UI, Roboto, Arial, sans-serif"),
+        margin=dict(t=0, b=0, l=0, r=0)
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 # --- Last slot: Leave blank or place your logo, or a short insight ---
