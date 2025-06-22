@@ -4,6 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import os
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 st.set_page_config(page_title="Heart Disease Dashboard", layout="wide")
 
