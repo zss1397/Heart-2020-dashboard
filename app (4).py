@@ -136,17 +136,25 @@ with row1[2]:
     fig_gender = px.pie(
         names=gender_counts.index,
         values=gender_counts.values,
-        hole=0.6,
+        hole=0.45,  # Slightly thicker donut
         height=170,
         width=170,
         color_discrete_sequence=px.colors.sequential.RdBu
     )
-    fig_gender.update_traces(textinfo="percent+label", textfont_size=11)
-    fig_gender.update_layout(
-        margin=dict(t=0, b=0, l=0, r=0), showlegend=True, legend=dict(orientation="v", x=1, y=0.5, font=dict(size=10)),
-        font=dict(size=11)
+    fig_gender.update_traces(
+        textinfo='label+percent',
+        textposition='inside',
+        insidetextorientation='horizontal',
+        textfont_size=14
     )
-    fig_gender.update_layout(title_text="By Gender", title_font=dict(size=11), title_x=0.5)
+    fig_gender.update_layout(
+        margin=dict(t=0, b=0, l=0, r=0),
+        showlegend=False,
+        font=dict(size=13),
+        title_text="By Gender",
+        title_font=dict(size=12),
+        title_x=0.5
+    )
     st.plotly_chart(fig_gender, use_container_width=True)
 
 # --- Bottom Row: Age Group | General Health ---
