@@ -82,42 +82,36 @@ with colB:
 
 st.markdown("---")
 
-import pandas as pd
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Choose columns of interest
-cols = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
+features = ["BMI", "PhysicalHealth", "MentalHealth", "SleepTime"]
 
-# Compute correlations for both groups
-corr_no = df[df["HeartDisease"] == "No"][cols].corr()
-corr_yes = df[df["HeartDisease"] == "Yes"][cols].corr()
+corr_no = df[df["HeartDisease"] == "No"][features].corr()
+corr_yes = df[df["HeartDisease"] == "Yes"][features].corr()
 
-# Stack the two correlation matrices for easier comparison
-# We'll use a "melt" to create a long-form dataframe and add a label
-corr_no_long = corr_no.reset_index().melt(id_vars="index")
-corr_no_long["HeartDisease"] = "No"
-corr_yes_long = corr_yes.reset_index().melt(id_vars="index")
-corr_yes_long["HeartDisease"] = "Yes"
+# Stack top (No) and bottom (Yes)
+combined_corr = np.vstack([corr_no.values, corr_yes.values])
+row_labels = [f"{f} (No)" for f in features] + [f"{f} (Yes)" for f in features]
 
-corr_long = pd.concat([corr_no_long, corr_yes_long])
-
-# Create a "pivot" to get a big matrix with (Variable, HeartDisease) pairs
-pivot = corr_long.pivot_table(
-    index=["index", "HeartDisease"], columns=["variable"], values="value"
+fig, ax = plt.subplots(figsize=(5.5, 4))  # <-- SMALLER SIZE
+sns.heatmap(
+    combined_corr,
+    annot=True,
+    fmt=".2f",
+    xticklabels=features,
+    yticklabels=row_labels,
+    cmap="YlOrRd",
+    vmin=-1, vmax=1,
+    linewidths=0.2,
+    cbar=True,
+    ax=ax,
+    annot_kws={"size": 7}
 )
-
-# To display as a heatmap, let's flatten the MultiIndex for rows
-pivot.index = [f"{idx} ({hd})" for idx, hd in pivot.index]
-
-fig, ax = plt.subplots(figsize=(8, 6))
-sns.heatmap(pivot, annot=True, cmap="coolwarm", vmin=-1, vmax=1, ax=ax)
-ax.set_title("Correlation Matrix: With and Without Heart Disease")
+ax.set_title("Correlation Matrix: With and Without Heart Disease", fontsize=11)
 plt.tight_layout()
 st.pyplot(fig)
-
-
 
 # --- More compact layout (Optional: Add more summary plots as needed) ---
 
