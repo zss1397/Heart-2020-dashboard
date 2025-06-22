@@ -157,3 +157,43 @@ st.info("""
 # ==== Optional: Data Table Expander at Bottom ====
 with st.expander("Show Data Table"):
     st.dataframe(hd_df.head())
+
+import streamlit as st
+import plotly.express as px
+
+# KPIs
+k1, k2, k3 = st.columns(3)
+k1.metric("❤️ Patients", f"{len(hd_df):,}")
+k2.metric("⚖️ Avg BMI", round(hd_df["BMI"].mean(), 1))
+k3.metric("🚬 Smoking Rate", f"{(hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%")
+
+st.markdown("---")
+
+# Profile Section
+st.header("🧑‍🤝‍🧑 Patient Profile")
+col1, col2 = st.columns(2)
+with col1:
+    fig_age = px.bar(..., color_discrete_sequence=["#e63946"])
+    fig_age.update_layout(height=200, width=320, plot_bgcolor="#F7F7F7", paper_bgcolor="#F7F7F7")
+    st.plotly_chart(fig_age, use_container_width=False)
+    st.info("Most patients are age 60+.")
+with col2:
+    fig_sex = px.pie(..., hole=0.45, color_discrete_sequence=["#f1faee", "#457b9d"])
+    fig_sex.update_layout(height=200, width=320)
+    st.plotly_chart(fig_sex, use_container_width=False)
+    st.info("More than half are male.")
+
+# Main Risk
+st.header("⚠️ Main Risk Factors")
+col3, col4 = st.columns(2)
+with col3:
+    fig_smoke = px.bar(..., orientation="h", color_discrete_sequence=["#e76f51", "#2a9d8f"])
+    fig_smoke.update_layout(height=200, width=320)
+    st.plotly_chart(fig_smoke, use_container_width=False)
+    st.success("Smokers have higher heart disease rates.")
+with col4:
+    fig_diab = px.bar(..., orientation="h", color_discrete_sequence=["#a8dadc", "#457b9d"])
+    fig_diab.update_layout(height=200, width=320)
+    st.plotly_chart(fig_diab, use_container_width=False)
+    st.warning("Diabetes is a strong risk factor.")
+
