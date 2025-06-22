@@ -147,20 +147,29 @@ with colE:
     fig_age.update_layout(showlegend=False)
     st.plotly_chart(fig_age, use_container_width=True)
 
-with colF:
-    st.subheader("🩺 General Health (Heart Disease Patients)")
-    gh_counts = hd_df["GenHealth"].value_counts()
-    fig_gh = px.bar(
-        x=gh_counts.index,
-        y=gh_counts.values,
-        labels={"x": "General Health", "y": "Count"},
-        title="General Health Status",
-        color=gh_counts.index,
-        color_discrete_sequence=px.colors.sequential.Plasma,
-        height=300
-    )
-    fig_gh.update_layout(showlegend=False)
-    st.plotly_chart(fig_gh, use_container_width=True)
+import pandas as pd
+import plotly.express as px
 
-# Remove footer, table, and summary; dashboard ends here.
+# Assuming df has "HeartDisease" and "GenHealth"
+df_summary = (
+    df.groupby(['HeartDisease', 'GenHealth'])
+    .size()
+    .reset_index(name='count')
+)
+
+# Calculate percentage within each group
+df_summary['percent'] = df_summary.groupby('HeartDisease')['count'].transform(lambda x: x / x.sum() * 100)
+
+fig = px.bar(
+    df_summary, 
+    x="GenHealth", 
+    y="percent", 
+    color="HeartDisease",
+    barmode="group",
+    labels={"GenHealth": "General Health", "percent": "% of Group", "HeartDisease": "Heart Disease"},
+    title="General Health Distribution by Heart Disease Status",
+    color_discrete_sequence=px.colors.qualitative.Pastel
+)
+st.plotly_chart(fig, use_container_width=True)
+
 
