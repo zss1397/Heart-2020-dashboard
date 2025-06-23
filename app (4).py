@@ -59,7 +59,7 @@ st.markdown(
         hd_df['BMI'].mean(),
         (hd_df['Smoking'] == 'Yes').mean() * 100,
         (hd_df['AlcoholDrinking'] == 'Yes').mean() * 100,
-        (hd_df['PhysicalActivity'] == 'Yes').mean() * 100,
+        (hd_df['PhysicalActivity'] == 'No').mean() * 100,
     ),
     unsafe_allow_html=True
 )
