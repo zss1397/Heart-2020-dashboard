@@ -35,6 +35,23 @@ df = pd.read_csv(csv_filename)
 hd_df = df[df["HeartDisease"] == "Yes"]
 nhd_df = df[df["HeartDisease"] == "No"]
 
+# --- Add Population Summary at the Very Top ---
+st.markdown(
+    f"""
+    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 0.5em;">
+        <span style="font-size:1.1rem; font-weight: 600; margin-right: 2.5rem;">
+            👥 <span style="color:#333;">Total Population:</span>
+            <span style="color:#0a58ca;">{len(df):,}</span>
+        </span>
+        <span style="font-size:1.1rem; font-weight: 600;">
+            ❤️ <span style="color:#333;">With Heart Disease:</span>
+            <span style="color:#c92c6d;">{len(hd_df):,}</span>
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # --- Header & KPIs (thin) ---
 st.markdown(
     """
@@ -63,6 +80,7 @@ st.markdown(
     ),
     unsafe_allow_html=True
 )
+
 
 # --- Top Row: Risk Factors | Heatmap | Gender Pie ---
 row1 = st.columns([1.8, 1.2, 0.7], gap="small")
