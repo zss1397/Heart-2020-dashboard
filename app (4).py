@@ -208,7 +208,7 @@ if len(hd_df) > 0:
     """, unsafe_allow_html=True)
 
 # Create comprehensive tabs
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 Original Dashboard", "📈 Advanced Analytics", "🔗 Correlations", "👥 Demographics", "💡 Insights", "📋 Data Explorer"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Original Dashboard", "📈 Advanced Analytics", "🔗 Correlations", "👥 Demographics", "💡 Insights & Data"])
 
 # TAB 1: Original Dashboard (Your beloved charts!)
 with tab1:
@@ -546,7 +546,7 @@ with tab2:
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-# TAB 3: Correlations (From Version 1)
+# TAB 3: Correlations
 with tab3:
     st.markdown('<div class="tab-content">', unsafe_allow_html=True)
     st.subheader("🔗 Feature Correlation Analysis")
@@ -606,7 +606,7 @@ with tab3:
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-# TAB 4: Demographics (Enhanced)
+# TAB 4: Demographics
 with tab4:
     st.markdown('<div class="tab-content">', unsafe_allow_html=True)
     st.subheader("👥 Comprehensive Demographic Analysis")
@@ -628,4 +628,12 @@ with tab4:
             y=demo_pivot.index,
             colorscale='Reds',
             hoverongaps=False,
-            h
+            hovertemplate='<b>%{y}</b><br>%{x}<br>HD Rate: %{z:.1f}%<extra></extra>'
+        ))
+        
+        fig_demo.update_layout(
+            title='Heart Disease Rate by Demographics',
+            height=400
+        )
+        
+        st.plotly_chart(fig_demo, use_container_
