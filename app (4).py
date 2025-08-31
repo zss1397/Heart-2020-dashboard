@@ -636,7 +636,7 @@ with tab4:
             height=400
         )
         
-        st.plotly_chart(fig_demo, use_container_width=True)width=True)
+        st.plotly_chart(fig_demo, use_container_width=True)
     
     with col2:
         st.markdown("#### 📊 Risk by Age Groups")
