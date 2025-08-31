@@ -114,6 +114,9 @@ st.markdown("""
 with st.sidebar:
     st.markdown('<div class="filter-section"><h3>🔍 Interactive Filters</h3></div>', unsafe_allow_html=True)
     
+    # Remove smoking filter, keep only demographic filters
+    st.info("ℹ️ Filters apply to the entire population, then heart disease analysis is performed on the filtered subset")
+    
     # Age filter
     age_options = ['All'] + sorted(df['AgeCategory'].unique().tolist())
     selected_age = st.selectbox('👥 Age Category', age_options)
@@ -121,14 +124,6 @@ with st.sidebar:
     # Gender filter
     gender_options = ['All'] + df['Sex'].unique().tolist()
     selected_gender = st.selectbox('⚧ Gender', gender_options)
-    
-    # Race filter  
-    race_options = ['All'] + sorted(df['Race'].unique().tolist())
-    selected_race = st.selectbox('🌍 Race/Ethnicity', race_options)
-    
-    # BMI range filter
-    bmi_min, bmi_max = float(df['BMI'].min()), float(df['BMI'].max())
-    bmi_range = st.slider('⚖️ BMI Range', bmi_min, bmi_max, (bmi_min, bmi_max), step=0.1)
     
     # General Health filter
     health_options = ['All'] + sorted(df['GenHealth'].unique().tolist())
@@ -140,18 +135,14 @@ with st.sidebar:
     st.markdown("### 📊 Filter Impact")
     original_size = len(df)
     
-    # Apply filters
+    # Apply filters to entire population (demographic only)
     filtered_df = df.copy()
     if selected_age != 'All':
         filtered_df = filtered_df[filtered_df['AgeCategory'] == selected_age]
     if selected_gender != 'All':
         filtered_df = filtered_df[filtered_df['Sex'] == selected_gender]
-    if selected_race != 'All':
-        filtered_df = filtered_df[filtered_df['Race'] == selected_race]
     if selected_health != 'All':
         filtered_df = filtered_df[filtered_df['GenHealth'] == selected_health]
-    
-    filtered_df = filtered_df[(filtered_df['BMI'] >= bmi_range[0]) & (filtered_df['BMI'] <= bmi_range[1])]
     
     filtered_size = len(filtered_df)
     st.metric("Records Showing", f"{filtered_size:,}", f"{filtered_size - original_size:,}")
@@ -192,20 +183,21 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Enhanced KPI row
-if len(hd_df) > 0:
+# Enhanced KPI row - ALWAYS shows whole population heart disease stats
+all_hd_df = df[df["HeartDisease"] == "Yes"]  # Unfiltered heart disease data
+if len(all_hd_df) > 0:
     st.markdown(f"""
     <div style='background: linear-gradient(90deg, #f7f7fa 0%, #e9ecef 100%); 
                 border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;
                 display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;
                 border: 1px solid #dee2e6;'>
-        <span style="font-weight: 600; color: #495057;">❤️ <span style="color: #c92c6d;">{len(hd_df):,}</span></span>
-        <span style="font-weight: 600; color: #495057;">⚖️ Avg BMI: <span style="color: #fd7e14;">{hd_df['BMI'].mean():.1f}</span></span>
-        <span style="font-weight: 600; color: #495057;">🚬 Smoking: <span style="color: #dc3545;">{(hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057;">🍺 Alcohol: <span style="color: #ffc107;">{(hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057;">🏃 Inactive: <span style="color: #6f42c1;">{(hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
+        <span style="font-weight: 600; color: #495057;">⚖️ Avg BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
+        <span style="font-weight: 600; color: #495057;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 # Create comprehensive tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Original Dashboard", "📈 Advanced Analytics", "🔗 Correlations", "👥 Demographics", "💡 Insights & Data"])
@@ -274,7 +266,7 @@ with tab1:
         sns.heatmap(
             heat_df,
             annot=True,
-            cmap="RdBu_r",
+            cmap="Reds",  # Light to dark red gradient
             fmt=".1f",
             ax=ax,
             cbar=True,
@@ -518,8 +510,8 @@ with tab2:
         st.plotly_chart(fig_age_adv, use_container_width=True)
     
     with col4:
-        # BMI Distribution Analysis
-        st.markdown("#### ⚖️ BMI Distribution Analysis")
+        # BMI vs General Health Analysis  
+        st.markdown("#### ⚖️ BMI vs General Health")
         
         # Create BMI categories
         filtered_df_copy = filtered_df.copy()
@@ -529,20 +521,29 @@ with tab2:
             labels=['Underweight', 'Normal', 'Overweight', 'Obese']
         )
         
-        bmi_analysis = filtered_df_copy.groupby(['BMI_Category', 'HeartDisease']).size().unstack(fill_value=0)
-        bmi_analysis_pct = bmi_analysis.div(bmi_analysis.sum(axis=1), axis=0) * 100
+        # Create BMI vs General Health heatmap
+        bmi_health_data = filtered_df_copy.groupby(['BMI_Category', 'GenHealth'])['HeartDisease'].apply(
+            lambda x: (x == 'Yes').mean() * 100
+        ).reset_index()
+        bmi_health_pivot = bmi_health_data.pivot(index='BMI_Category', columns='GenHealth', values='HeartDisease')
         
-        fig_bmi = px.bar(
-            bmi_analysis_pct.reset_index(), 
-            x='BMI_Category', 
-            y=['No', 'Yes'],
-            title='Heart Disease Rate by BMI Category',
-            labels={'value': 'Percentage', 'BMI_Category': 'BMI Category'},
-            color_discrete_map={'No': '#28a745', 'Yes': '#c92c6d'},
-            height=400
+        fig_bmi_health = go.Figure(data=go.Heatmap(
+            z=bmi_health_pivot.values,
+            x=bmi_health_pivot.columns,
+            y=bmi_health_pivot.index,
+            colorscale='Oranges',  # Light to dark orange gradient
+            hoverongaps=False,
+            hovertemplate='<b>%{y}</b><br>%{x} Health<br>HD Rate: %{z:.1f}%<extra></extra>'
+        ))
+        
+        fig_bmi_health.update_layout(
+            title='Heart Disease Rate: BMI vs General Health',
+            height=400,
+            xaxis_title='General Health Status',
+            yaxis_title='BMI Category'
         )
         
-        st.plotly_chart(fig_bmi, use_container_width=True)
+        st.plotly_chart(fig_bmi_health, use_container_width=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -570,8 +571,7 @@ with tab3:
         z=correlation_matrix.values,
         x=correlation_matrix.columns,
         y=correlation_matrix.index,
-        colorscale='RdBu',
-        zmid=0,
+        colorscale='Blues',  # Light to dark blue gradient
         hoverongaps=False,
         hovertemplate='<b>%{y}</b> vs <b>%{x}</b><br>Correlation: %{z:.3f}<extra></extra>'
     ))
@@ -614,29 +614,30 @@ with tab4:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### 🌍 Heart Disease by Race & Gender")
+        st.markdown("#### 📊 Heart Disease by Gender")
         
-        # Create demographic heatmap
-        demo_data = filtered_df.groupby(['Sex', 'Race'])['HeartDisease'].apply(
+        # Create gender analysis
+        gender_data = filtered_df.groupby(['Sex'])['HeartDisease'].apply(
             lambda x: (x == 'Yes').mean() * 100
         ).reset_index()
-        demo_pivot = demo_data.pivot(index='Race', columns='Sex', values='HeartDisease')
         
-        fig_demo = go.Figure(data=go.Heatmap(
-            z=demo_pivot.values,
-            x=demo_pivot.columns,
-            y=demo_pivot.index,
-            colorscale='Reds',
-            hoverongaps=False,
-            hovertemplate='<b>%{y}</b><br>%{x}<br>HD Rate: %{z:.1f}%<extra></extra>'
-        ))
-        
-        fig_demo.update_layout(
-            title='Heart Disease Rate by Demographics',
+        fig_gender_analysis = px.bar(
+            gender_data,
+            x='Sex',
+            y='HeartDisease',
+            title='Heart Disease Rate by Gender',
+            color='HeartDisease',
+            color_continuous_scale='Reds',
             height=400
         )
         
-        st.plotly_chart(fig_demo, use_container_width=True)
+        fig_gender_analysis.update_layout(
+            xaxis_title='Gender',
+            yaxis_title='Heart Disease Rate (%)',
+            showlegend=False
+        )
+        
+        st.plotly_chart(fig_gender_analysis, use_container_width=True)
     
     with col2:
         st.markdown("#### 📊 Risk by Age Groups")
@@ -710,15 +711,14 @@ with tab4:
                 'HD Rate (%)': f"{hd_rate:.1f}%"
             })
     
-    # By Race (top 5 most common)
-    top_races = filtered_df['Race'].value_counts().head(5).index
-    for race in top_races:
-        subset = filtered_df[filtered_df['Race'] == race]
+    # By General Health Status
+    for health in sorted(filtered_df['GenHealth'].unique()):
+        subset = filtered_df[filtered_df['GenHealth'] == health]
         if len(subset) > 0:
             hd_rate = (subset['HeartDisease'] == 'Yes').mean() * 100
             demographic_analysis.append({
-                'Category': 'Race',
-                'Group': race,
+                'Category': 'Health Status',
+                'Group': health,
                 'Total': len(subset),
                 'HD Cases': len(subset[subset['HeartDisease'] == 'Yes']),
                 'HD Rate (%)': f"{hd_rate:.1f}%"
