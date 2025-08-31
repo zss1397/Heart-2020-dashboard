@@ -73,9 +73,6 @@ st.markdown("""
     .stSelectbox > div > div {
         background-color: #f8f9fa;
     }
-    .stSlider > div > div > div {
-        background-color: #667eea;
-    }
     .correlation-section {
         background: #f8f9fa;
         padding: 1rem;
@@ -114,7 +111,7 @@ if df is None:
 st.markdown("""
 <div class="main-header">
     <h1>❤️ Heart Disease Analytics Dashboard</h1>
-    <p style="margin-bottom: 0;">Ultimate insights combining original visualizations with advanced analytics</p>
+    <p style="margin-bottom: 0;">Comprehensive insights into cardiovascular health patterns and risk factors</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -142,7 +139,7 @@ with st.sidebar:
     st.markdown("### 📊 Filter Impact")
     original_size = len(df)
     
-    # Apply filters to entire population (demographic only)
+    # Apply filters to entire population
     filtered_df = df.copy()
     if selected_age != 'All':
         filtered_df = filtered_df[filtered_df['AgeCategory'] == selected_age]
@@ -159,8 +156,8 @@ with st.sidebar:
         st.metric("Heart Disease Rate", f"{hd_rate:.1f}%")
 
 # Calculate datasets
-hd_df = filtered_df[filtered_df["HeartDisease"] == "Yes"]  # Filtered heart disease cases
-nhd_df = filtered_df[filtered_df["HeartDisease"] == "No"]  # Filtered healthy cases
+hd_df = filtered_df[filtered_df["HeartDisease"] == "Yes"]
+nhd_df = filtered_df[filtered_df["HeartDisease"] == "No"]
 all_hd_df = df[df["HeartDisease"] == "Yes"]  # ALL heart disease cases (unfiltered)
 
 if len(filtered_df) == 0:
@@ -209,14 +206,12 @@ if len(all_hd_df) > 0:
 # Create comprehensive tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Original Dashboard", "📈 Advanced Analytics", "🔗 Correlations", "👥 Demographics", "💡 Insights & Data"])
 
-# TAB 1: Original Dashboard (Your beloved charts!)
+# TAB 1: Original Dashboard
 with tab1:
-    st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-    
     # Your original visualizations with enhanced containers
     row1 = st.columns([1.8, 1.2, 0.7], gap="medium")
 
-    # Chart 1: Risk Factors Bar (your original code enhanced)
+    # Chart 1: Risk Factors Bar
     with row1[0]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
         st.markdown("#### 🎯 Risk Factors Analysis")
@@ -262,7 +257,7 @@ with tab1:
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Chart 2: Comorbidities Heatmap (enhanced)
+    # Chart 2: Comorbidities Heatmap
     with row1[1]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
         st.markdown("#### 🔥 Comorbidities Heatmap")
@@ -273,7 +268,7 @@ with tab1:
         sns.heatmap(
             heat_df,
             annot=True,
-            cmap="Reds",  # Light to dark red gradient
+            cmap="Reds",
             fmt=".1f",
             ax=ax,
             cbar=True,
@@ -289,7 +284,7 @@ with tab1:
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Chart 3: Gender Pie (enhanced)
+    # Chart 3: Gender Pie
     with row1[2]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
         st.markdown("#### ⚧ Gender Distribution")
@@ -318,7 +313,7 @@ with tab1:
             st.plotly_chart(fig_gender, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Bottom Row: Enhanced versions
+    # Bottom Row
     row2 = st.columns(2, gap="medium")
 
     with row2[0]:
@@ -378,19 +373,14 @@ with tab1:
             )
             st.plotly_chart(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
-# TAB 2: Advanced Analytics (Interactive Plotly charts)
+# TAB 2: Advanced Analytics
 with tab2:
-    st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-    
     col1, col2 = st.columns([2, 1])
     
     with col1:
         st.subheader("🎯 Interactive Risk Factor Analysis")
         
-        # Enhanced interactive risk factors chart
         risk_factors = ["Smoking", "AlcoholDrinking", "Diabetic", "PhysicalActivity", 
                        "Stroke", "DiffWalking", "Asthma", "KidneyDisease", "SkinCancer"]
         
@@ -414,30 +404,28 @@ with tab2:
         
         risk_df_adv = pd.DataFrame(risk_data)
         
-        # Create interactive bar chart
         fig = go.Figure()
         fig.add_trace(go.Bar(
             name='Heart Disease',
             x=risk_df_adv['Factor'],
             y=risk_df_adv['Heart Disease'],
             marker_color='#e63946',
-            hovertemplate='<b>%{x}</b><br>Heart Disease: %{y:.1f}%<br>Risk Factor Prevalence<extra></extra>'
+            hovertemplate='<b>%{x}</b><br>Heart Disease: %{y:.1f}%<extra></extra>'
         ))
         fig.add_trace(go.Bar(
             name='No Heart Disease',
             x=risk_df_adv['Factor'],
             y=risk_df_adv['No Heart Disease'],
             marker_color='#457b9d',
-            hovertemplate='<b>%{x}</b><br>No Heart Disease: %{y:.1f}%<br>Risk Factor Prevalence<extra></extra>'
+            hovertemplate='<b>%{x}</b><br>No Heart Disease: %{y:.1f}%<extra></extra>'
         ))
         
         fig.update_layout(
-            title='Interactive Risk Factor Prevalence Comparison',
+            title='Interactive Risk Factor Prevalence',
             xaxis_title='Risk Factors',
             yaxis_title='Prevalence (%)',
             barmode='group',
-            height=400,
-            hovermode='x unified'
+            height=400
         )
         
         st.plotly_chart(fig, use_container_width=True)
@@ -445,7 +433,6 @@ with tab2:
     with col2:
         st.subheader("📊 Risk Ratios")
         
-        # Risk ratio visualization
         risk_df_sorted = risk_df_adv.sort_values('Risk Ratio', ascending=True)
         
         fig_ratio = go.Figure(go.Bar(
@@ -453,7 +440,7 @@ with tab2:
             y=risk_df_sorted['Factor'],
             orientation='h',
             marker_color='#ff6b6b',
-            hovertemplate='<b>%{y}</b><br>Risk Ratio: %{x:.2f}x<br>Higher risk for HD patients<extra></extra>'
+            hovertemplate='<b>%{y}</b><br>Risk Ratio: %{x:.2f}x<extra></extra>'
         ))
         
         fig_ratio.update_layout(
@@ -465,13 +452,13 @@ with tab2:
         
         st.plotly_chart(fig_ratio, use_container_width=True)
     
-    # Advanced Age Analysis
-    st.subheader("📈 Advanced Age & Health Analysis")
+    # Advanced Analysis
+    st.subheader("📈 Advanced Analysis")
     
     col3, col4 = st.columns(2)
     
     with col3:
-        # Age distribution with HD rates
+        # Age analysis
         age_data = []
         for age_cat in sorted(filtered_df['AgeCategory'].unique()):
             total_age = len(filtered_df[filtered_df['AgeCategory'] == age_cat])
@@ -492,8 +479,7 @@ with tab2:
             x=age_df_adv['Age Category'],
             y=age_df_adv['Total'],
             marker_color='lightblue',
-            yaxis='y',
-            hovertemplate='<b>%{x}</b><br>Total Population: %{y}<extra></extra>'
+            yaxis='y'
         ))
         fig_age_adv.add_trace(go.Scatter(
             name='HD Rate (%)',
@@ -502,15 +488,14 @@ with tab2:
             mode='lines+markers',
             marker=dict(color='red', size=8),
             line=dict(width=3, color='red'),
-            yaxis='y2',
-            hovertemplate='<b>%{x}</b><br>HD Rate: %{y:.1f}%<extra></extra>'
+            yaxis='y2'
         ))
         
         fig_age_adv.update_layout(
-            title='Population & Heart Disease Rate by Age',
+            title='Population & HD Rate by Age',
             xaxis_title='Age Category',
-            yaxis=dict(title='Population Count', side='left'),
-            yaxis2=dict(title='Heart Disease Rate (%)', side='right', overlaying='y'),
+            yaxis=dict(title='Population', side='left'),
+            yaxis2=dict(title='HD Rate (%)', side='right', overlaying='y'),
             height=400
         )
         
@@ -520,7 +505,6 @@ with tab2:
         # BMI vs General Health Analysis  
         st.markdown("#### ⚖️ BMI vs General Health")
         
-        # Create BMI categories
         filtered_df_copy = filtered_df.copy()
         filtered_df_copy['BMI_Category'] = pd.cut(
             filtered_df_copy['BMI'], 
@@ -528,7 +512,6 @@ with tab2:
             labels=['Underweight', 'Normal', 'Overweight', 'Obese']
         )
         
-        # Create BMI vs General Health heatmap
         bmi_health_data = filtered_df_copy.groupby(['BMI_Category', 'GenHealth'])['HeartDisease'].apply(
             lambda x: (x == 'Yes').mean() * 100
         ).reset_index()
@@ -538,33 +521,28 @@ with tab2:
             z=bmi_health_pivot.values,
             x=bmi_health_pivot.columns,
             y=bmi_health_pivot.index,
-            colorscale='Oranges',  # Light to dark orange gradient
+            colorscale='Oranges',
             hoverongaps=False,
             hovertemplate='<b>%{y}</b><br>%{x} Health<br>HD Rate: %{z:.1f}%<extra></extra>'
         ))
         
         fig_bmi_health.update_layout(
-            title='Heart Disease Rate: BMI vs General Health',
+            title='HD Rate: BMI vs General Health',
             height=400,
-            xaxis_title='General Health Status',
+            xaxis_title='General Health',
             yaxis_title='BMI Category'
         )
         
         st.plotly_chart(fig_bmi_health, use_container_width=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # TAB 3: Correlations
 with tab3:
-    st.markdown('<div class="tab-content">', unsafe_allow_html=True)
     st.subheader("🔗 Feature Correlation Analysis")
     
-    # Create correlation matrix
     corr_cols = ['BMI', 'MentalHealth', 'PhysicalHealth', 'SleepTime']
     binary_cols = ['Smoking', 'AlcoholDrinking', 'Stroke', 'DiffWalking', 'Diabetic', 
                    'PhysicalActivity', 'Asthma', 'KidneyDisease', 'SkinCancer']
     
-    # Convert binary variables to numeric
     corr_df = filtered_df[corr_cols].copy()
     for col in binary_cols:
         corr_df[col] = (filtered_df[col] == 'Yes').astype(int)
@@ -573,25 +551,22 @@ with tab3:
     
     correlation_matrix = corr_df.corr()
     
-    # Create interactive heatmap
     fig_corr = go.Figure(data=go.Heatmap(
         z=correlation_matrix.values,
         x=correlation_matrix.columns,
         y=correlation_matrix.index,
-        colorscale='Blues',  # Light to dark blue gradient
+        colorscale='Blues',
         hoverongaps=False,
         hovertemplate='<b>%{y}</b> vs <b>%{x}</b><br>Correlation: %{z:.3f}<extra></extra>'
     ))
     
     fig_corr.update_layout(
         title='Feature Correlation Matrix',
-        height=600,
-        width=800
+        height=600
     )
     
     st.plotly_chart(fig_corr, use_container_width=True)
     
-    # Top correlations analysis
     hd_correlations = correlation_matrix['HeartDisease'].drop('HeartDisease').sort_values(key=abs, ascending=False)
     
     col1, col2 = st.columns(2)
@@ -610,20 +585,16 @@ with tab3:
         for feature, corr in negative_corr.items():
             st.write(f"**{feature}**: {corr:.3f}")
         st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # TAB 4: Demographics
 with tab4:
-    st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-    st.subheader("👥 Comprehensive Demographic Analysis")
+    st.subheader("👥 Demographic Analysis")
     
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown("#### 📊 Heart Disease by Gender")
         
-        # Create gender analysis
         gender_data = filtered_df.groupby(['Sex'])['HeartDisease'].apply(
             lambda x: (x == 'Yes').mean() * 100
         ).reset_index()
@@ -643,3 +614,45 @@ with tab4:
             yaxis_title='Heart Disease Rate (%)',
             showlegend=False
         )
+        
+        st.plotly_chart(fig_gender_analysis, use_container_width=True)
+    
+    with col2:
+        st.markdown("#### 📊 Risk by Age Groups")
+        
+        age_risk_data = []
+        for age_cat in sorted(filtered_df['AgeCategory'].unique()):
+            age_subset = filtered_df[filtered_df['AgeCategory'] == age_cat]
+            total = len(age_subset)
+            hd_cases = len(age_subset[age_subset['HeartDisease'] == 'Yes'])
+            risk_rate = (hd_cases / total * 100) if total > 0 else 0
+            
+            age_risk_data.append({
+                'Age Group': age_cat,
+                'Total Population': total,
+                'HD Cases': hd_cases,
+                'Risk Rate (%)': risk_rate
+            })
+        
+        age_risk_df = pd.DataFrame(age_risk_data)
+        
+        fig_age_risk = px.line(
+            age_risk_df,
+            x='Age Group',
+            y='Risk Rate (%)',
+            markers=True,
+            title='Heart Disease Risk by Age Group',
+            color_discrete_sequence=['#e63946']
+        )
+        
+        fig_age_risk.update_traces(
+            line=dict(width=3),
+            marker=dict(size=8),
+            hovertemplate='<b>%{x}</b><br>Risk Rate: %{y:.1f}%<extra></extra>'
+        )
+        
+        fig_age_risk.update_layout(height=400)
+        
+        st.plotly_chart(fig_age_risk, use_container_width=True)
+    
+    #
