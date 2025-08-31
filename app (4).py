@@ -95,7 +95,15 @@ def load_data():
     if not os.path.exists(csv_filename):
         st.error("❌ CSV file not found.")
         return None
-    return pd.read_csv(csv_filename)
+    try:
+        df = pd.read_csv(csv_filename)
+        if df.empty:
+            st.error("❌ CSV file is empty.")
+            return None
+        return df
+    except Exception as e:
+        st.error(f"❌ Error loading CSV: {e}")
+        return None
 
 # Load data
 df = load_data()
@@ -110,12 +118,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Sidebar filters
+# Sidebar filters - Only demographic filters
 with st.sidebar:
-    st.markdown('<div class="filter-section"><h3>🔍 Interactive Filters</h3></div>', unsafe_allow_html=True)
+    st.markdown('<div class="filter-section"><h3>🔍 Demographic Filters</h3></div>', unsafe_allow_html=True)
     
-    # Remove smoking filter, keep only demographic filters
-    st.info("ℹ️ Filters apply to the entire population, then heart disease analysis is performed on the filtered subset")
+    st.info("ℹ️ Filters apply to entire population, then heart disease analysis is performed on the filtered subset")
     
     # Age filter
     age_options = ['All'] + sorted(df['AgeCategory'].unique().tolist())
@@ -151,15 +158,16 @@ with st.sidebar:
         hd_rate = (filtered_df['HeartDisease'] == 'Yes').mean() * 100
         st.metric("Heart Disease Rate", f"{hd_rate:.1f}%")
 
-# Calculate filtered datasets
-hd_df = filtered_df[filtered_df["HeartDisease"] == "Yes"]
-nhd_df = filtered_df[filtered_df["HeartDisease"] == "No"]
+# Calculate datasets
+hd_df = filtered_df[filtered_df["HeartDisease"] == "Yes"]  # Filtered heart disease cases
+nhd_df = filtered_df[filtered_df["HeartDisease"] == "No"]  # Filtered healthy cases
+all_hd_df = df[df["HeartDisease"] == "Yes"]  # ALL heart disease cases (unfiltered)
 
 if len(filtered_df) == 0:
     st.error("No data matches the selected filters. Please adjust your filter criteria.")
     st.stop()
 
-# Enhanced population summary
+# Population summary (responds to filters)
 st.markdown(f"""
 <div class="metric-container">
     <div style="display: flex; justify-content: center; align-items: center; gap: 3rem; flex-wrap: wrap;">
@@ -183,8 +191,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Enhanced KPI row - ALWAYS shows whole population heart disease stats
-all_hd_df = df[df["HeartDisease"] == "Yes"]  # Unfiltered heart disease data
+# KPI row showing ALL heart disease patients (unfiltered baseline)
 if len(all_hd_df) > 0:
     st.markdown(f"""
     <div style='background: linear-gradient(90deg, #f7f7fa 0%, #e9ecef 100%); 
@@ -197,7 +204,7 @@ if len(all_hd_df) > 0:
         <span style="font-weight: 600; color: #495057;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
         <span style="font-weight: 600; color: #495057;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
     </div>
-    """)
+    """, unsafe_allow_html=True)
 
 # Create comprehensive tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Original Dashboard", "📈 Advanced Analytics", "🔗 Correlations", "👥 Demographics", "💡 Insights & Data"])
@@ -636,249 +643,3 @@ with tab4:
             yaxis_title='Heart Disease Rate (%)',
             showlegend=False
         )
-        
-        st.plotly_chart(fig_gender_analysis, use_container_width=True)
-    
-    with col2:
-        st.markdown("#### 📊 Risk by Age Groups")
-        
-        # Age group risk analysis
-        age_risk_data = []
-        for age_cat in sorted(filtered_df['AgeCategory'].unique()):
-            age_subset = filtered_df[filtered_df['AgeCategory'] == age_cat]
-            total = len(age_subset)
-            hd_cases = len(age_subset[age_subset['HeartDisease'] == 'Yes'])
-            risk_rate = (hd_cases / total * 100) if total > 0 else 0
-            
-            age_risk_data.append({
-                'Age Group': age_cat,
-                'Total Population': total,
-                'HD Cases': hd_cases,
-                'Risk Rate (%)': risk_rate
-            })
-        
-        age_risk_df = pd.DataFrame(age_risk_data)
-        
-        fig_age_risk = px.line(
-            age_risk_df,
-            x='Age Group',
-            y='Risk Rate (%)',
-            markers=True,
-            title='Heart Disease Risk by Age Group',
-            color_discrete_sequence=['#e63946']
-        )
-        
-        fig_age_risk.update_traces(
-            line=dict(width=3),
-            marker=dict(size=8),
-            hovertemplate='<b>%{x}</b><br>Risk Rate: %{y:.1f}%<br>Population: %{customdata[0]}<extra></extra>',
-            customdata=age_risk_df[['Total Population']].values
-        )
-        
-        fig_age_risk.update_layout(height=400)
-        
-        st.plotly_chart(fig_age_risk, use_container_width=True)
-    
-    # Detailed demographic breakdown table
-    st.markdown("#### 📋 Detailed Risk Analysis Table")
-    
-    # Create comprehensive demographic analysis
-    demographic_analysis = []
-    
-    # By Age Category
-    for age in sorted(filtered_df['AgeCategory'].unique()):
-        subset = filtered_df[filtered_df['AgeCategory'] == age]
-        if len(subset) > 0:
-            hd_rate = (subset['HeartDisease'] == 'Yes').mean() * 100
-            demographic_analysis.append({
-                'Category': 'Age',
-                'Group': age,
-                'Total': len(subset),
-                'HD Cases': len(subset[subset['HeartDisease'] == 'Yes']),
-                'HD Rate (%)': f"{hd_rate:.1f}%"
-            })
-    
-    # By Gender
-    for gender in filtered_df['Sex'].unique():
-        subset = filtered_df[filtered_df['Sex'] == gender]
-        if len(subset) > 0:
-            hd_rate = (subset['HeartDisease'] == 'Yes').mean() * 100
-            demographic_analysis.append({
-                'Category': 'Gender',
-                'Group': gender,
-                'Total': len(subset),
-                'HD Cases': len(subset[subset['HeartDisease'] == 'Yes']),
-                'HD Rate (%)': f"{hd_rate:.1f}%"
-            })
-    
-    # By General Health Status
-    for health in sorted(filtered_df['GenHealth'].unique()):
-        subset = filtered_df[filtered_df['GenHealth'] == health]
-        if len(subset) > 0:
-            hd_rate = (subset['HeartDisease'] == 'Yes').mean() * 100
-            demographic_analysis.append({
-                'Category': 'Health Status',
-                'Group': health,
-                'Total': len(subset),
-                'HD Cases': len(subset[subset['HeartDisease'] == 'Yes']),
-                'HD Rate (%)': f"{hd_rate:.1f}%"
-            })
-    
-    demo_df = pd.DataFrame(demographic_analysis)
-    st.dataframe(demo_df, use_container_width=True, height=400)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# TAB 5: Insights & Data Explorer
-with tab5:
-    st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-    
-    # Insights Section
-    st.subheader("💡 Key Insights & Recommendations")
-    
-    # Generate dynamic insights based on filtered data
-    insights = []
-    
-    if len(hd_df) > 0:
-        # Age insights
-        age_rates = filtered_df.groupby('AgeCategory')['HeartDisease'].apply(lambda x: (x == 'Yes').mean() * 100)
-        if len(age_rates) > 0:
-            highest_risk_age = age_rates.idxmax()
-            insights.append(f"🔍 **Age Analysis**: The {highest_risk_age} group shows the highest heart disease rate at {age_rates.max():.1f}%")
-        
-        # BMI insights  
-        avg_bmi_hd = hd_df['BMI'].mean()
-        avg_bmi_no_hd = nhd_df['BMI'].mean() if len(nhd_df) > 0 else 0
-        bmi_diff = avg_bmi_hd - avg_bmi_no_hd
-        insights.append(f"⚖️ **BMI Impact**: Heart disease patients have an average BMI {bmi_diff:.1f} points higher ({avg_bmi_hd:.1f} vs {avg_bmi_no_hd:.1f})")
-        
-        # Lifestyle insights
-        smoking_hd = (hd_df['Smoking'] == 'Yes').mean() * 100
-        smoking_no_hd = (nhd_df['Smoking'] == 'Yes').mean() * 100 if len(nhd_df) > 0 else 0
-        insights.append(f"🚬 **Smoking Impact**: {smoking_hd:.1f}% of HD patients smoke vs {smoking_no_hd:.1f}% of healthy individuals")
-        
-        # Activity insights
-        inactive_hd = (hd_df['PhysicalActivity'] == 'No').mean() * 100
-        inactive_no_hd = (nhd_df['PhysicalActivity'] == 'No').mean() * 100 if len(nhd_df) > 0 else 0
-        insights.append(f"🏃 **Activity Impact**: {inactive_hd:.1f}% of HD patients are physically inactive vs {inactive_no_hd:.1f}% of healthy individuals")
-        
-        # Gender insights
-        if len(filtered_df.groupby('Sex')['HeartDisease'].apply(lambda x: (x == 'Yes').mean() * 100)) > 1:
-            gender_rates = filtered_df.groupby('Sex')['HeartDisease'].apply(lambda x: (x == 'Yes').mean() * 100)
-            higher_risk_gender = gender_rates.idxmax()
-            insights.append(f"⚧ **Gender Risk**: {higher_risk_gender}s show higher heart disease rates ({gender_rates.max():.1f}% vs {gender_rates.min():.1f}%)")
-    
-    # Display insights in cards
-    for i, insight in enumerate(insights):
-        st.markdown(f'<div class="insight-card">{insight}</div>', unsafe_allow_html=True)
-    
-    # Health recommendations
-    st.markdown("### 🎯 Personalized Health Recommendations")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("#### 🏃‍♂️ Lifestyle Modifications")
-        lifestyle_recs = [
-            "**Exercise Regularly**: Aim for 150+ minutes of moderate exercise per week",
-            "**Avoid Smoking**: Smoking dramatically increases cardiovascular risk",
-            "**Healthy Diet**: Focus on heart-healthy foods like fruits, vegetables, and whole grains",
-            "**Maintain Healthy Weight**: Keep BMI in the normal range (18.5-24.9)"
-        ]
-        for rec in lifestyle_recs:
-            st.markdown(f"- {rec}")
-    
-    with col2:
-        st.markdown("#### 🩺 Medical Care")
-        medical_recs = [
-            "**Regular Checkups**: Monitor blood pressure, cholesterol, and blood sugar",
-            "**Quality Sleep**: Get 7-9 hours of restful sleep nightly",
-            "**Manage Stress**: Practice stress-reduction techniques like meditation",
-            "**Follow Prescriptions**: Take medications as directed by healthcare providers"
-        ]
-        for rec in medical_recs:
-            st.markdown(f"- {rec}")
-    
-    # Data Explorer Section
-    st.subheader("📋 Data Explorer")
-    
-    # Data overview metrics
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("Total Records", f"{len(filtered_df):,}")
-    with col2:
-        st.metric("Features", len(filtered_df.columns))
-    with col3:
-        st.metric("Heart Disease Rate", f"{(len(hd_df)/len(filtered_df)*100):.1f}%")
-    with col4:
-        avg_age_numeric = filtered_df['AgeCategory'].map({
-            '18-24': 21, '25-29': 27, '30-34': 32, '35-39': 37, 
-            '40-44': 42, '45-49': 47, '50-54': 52, '55-59': 57,
-            '60-64': 62, '65-69': 67, '70-74': 72, '75-79': 77, '80 or older': 85
-        }).mean()
-        st.metric("Avg Age Group", f"~{avg_age_numeric:.0f} years")
-    
-    # Data sample viewer
-    st.markdown("#### 📊 Data Sample")
-    
-    # Option to view different data segments
-    view_option = st.selectbox(
-        "Choose data view:",
-        ["All Data", "Heart Disease Cases Only", "Healthy Cases Only", "High Risk Factors"]
-    )
-    
-    if view_option == "Heart Disease Cases Only":
-        display_df = hd_df
-    elif view_option == "Healthy Cases Only":
-        display_df = nhd_df
-    elif view_option == "High Risk Factors":
-        # Show people with multiple risk factors
-        risk_score = (
-            (filtered_df['Smoking'] == 'Yes').astype(int) +
-            (filtered_df['Diabetic'] == 'Yes').astype(int) +
-            (filtered_df['PhysicalActivity'] == 'No').astype(int) +
-            (filtered_df['BMI'] > 30).astype(int)
-        )
-        display_df = filtered_df[risk_score >= 2]  # 2+ risk factors
-    else:
-        display_df = filtered_df
-    
-    st.dataframe(
-        display_df.head(100),
-        use_container_width=True,
-        height=400
-    )
-    
-    # Statistical summary
-    st.markdown("#### 📈 Statistical Summary")
-    st.dataframe(
-        display_df.describe(),
-        use_container_width=True
-    )
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Enhanced footer with comprehensive filter status
-st.markdown("---")
-active_filters = []
-if selected_age != 'All':
-    active_filters.append(f"Age: {selected_age}")
-if selected_gender != 'All':
-    active_filters.append(f"Gender: {selected_gender}")  
-if selected_race != 'All':
-    active_filters.append(f"Race: {selected_race}")
-if selected_health != 'All':
-    active_filters.append(f"Health: {selected_health}")
-if bmi_range != (bmi_min, bmi_max):
-    active_filters.append(f"BMI: {bmi_range[0]:.1f}-{bmi_range[1]:.1f}")
-
-filter_text = " | ".join(active_filters) if active_filters else "No filters applied"
-
-st.markdown(f"""
-<div style='text-align: center; color: #666; padding: 1rem; background: #f8f9fa; border-radius: 10px;'>
-    <p><strong>❤️ Ultimate Heart Disease Analytics Dashboard</strong> | Built with Streamlit</p>
-    <p>📊 Showing {len(filtered_df):,} records | Active Filters: {filter_text}</p>
-    <p>🎯 Heart Disease Rate in Current View: {(len(hd_df)/len(filtered_df)*100):.1f}%</p>
-    <p>🔬 Combining original matplotlib/seaborn charts with advanced Plotly analytics</p>
-</div>
-""", unsafe_allow_html=True)
