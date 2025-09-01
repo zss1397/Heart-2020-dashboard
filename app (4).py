@@ -76,46 +76,6 @@ st.markdown("""
     h4 { font-size: 1rem !important; margin-bottom: 0.2rem !important; }
     .metric-value { font-size: 1.2rem !important; }
 </style>
-""", unsafe_allow_html=True)ea;
-        color: white;
-        padding: 1rem;
-        border-radius: 10px;
-        margin-bottom: 1rem;
-    }
-    .insight-card {
-        background: #f8f9fa;
-        border-left: 4px solid #667eea;
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 5px;
-    }
-    .chart-container {
-        background: white;
-        padding: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 1rem;
-    }
-    html, body, [class*="css"]  {
-        font-size: 13px !important;
-        font-family: 'Segoe UI', 'Roboto', Arial, sans-serif !important;
-    }
-    .block-container {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-    }
-    .stSelectbox > div > div {
-        background-color: #f8f9fa;
-    }
-    .correlation-section {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 1rem 0;
-    }
-</style>
 """, unsafe_allow_html=True)
 
 plt.rcParams.update({'font.size': 10, 'font.family': 'sans-serif'})
@@ -144,11 +104,10 @@ def load_data():
 
 df = load_data()
 
-# Main header
+# Main header - More compact
 st.markdown("""
 <div class="main-header">
     <h1>❤️ Heart Disease Analytics Dashboard</h1>
-    <p style="margin-bottom: 0;">Comprehensive insights into cardiovascular health patterns</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -218,18 +177,18 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# KPI row - ALL heart disease patients (baseline)
+# KPI row - More compact
 if len(all_hd_df) > 0:
     st.markdown(f"""
     <div style='background: linear-gradient(90deg, #f7f7fa 0%, #e9ecef 100%); 
-                border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;
-                display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;
+                border-radius: 8px; padding: 0.8rem; margin-bottom: 1rem;
+                display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
                 border: 1px solid #dee2e6;'>
-        <span style="font-weight: 600; color: #495057;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
-        <span style="font-weight: 600; color: #495057;">⚖️ Avg BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
-        <span style="font-weight: 600; color: #495057;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">⚖️ BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -240,10 +199,10 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Original Dashboard", "📈 Advance
 with tab1:
     row1 = st.columns([1.8, 1.2, 0.7], gap="medium")
 
-    # Risk Factors Bar
+    # Risk Factors Bar - More compact
     with row1[0]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("#### 🎯 Risk Factors Analysis")
+        st.markdown("##### 🎯 Risk Factors")
         
         risk_factors = ["Smoking", "AlcoholDrinking", "Diabetic", "PhysicalActivity",
                        "Stroke", "DiffWalking", "Asthma", "KidneyDisease", "SkinCancer"]
@@ -265,49 +224,49 @@ with tab1:
         })
         melt_df = risk_df.melt(id_vars="Risk Factor", value_vars=["Heart Disease", "No Heart Disease"],
                             var_name="HD", value_name="Prevalence (%)")
-        fig, ax = plt.subplots(figsize=(5, 2.5))
+        fig, ax = plt.subplots(figsize=(4.5, 2))
         sns.barplot(data=melt_df, x="Prevalence (%)", y="Risk Factor", hue="HD",
                    palette=["#e63946", "#457b9d"], orient="h")
-        ax.set_xlabel("Prevalence (%)", fontsize=11)
+        ax.set_xlabel("Prevalence (%)", fontsize=9)
         ax.set_ylabel("")
-        ax.set_title("Risk Factors Comparison", fontsize=12, pad=10)
-        ax.legend(fontsize=10, title='', loc='lower right')
-        plt.tight_layout(pad=0.8)
+        ax.set_title("Risk Factors", fontsize=10, pad=5)
+        ax.legend(fontsize=8, title='', loc='lower right')
+        plt.tight_layout(pad=0.3)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Comorbidities Heatmap
+    # Comorbidities Heatmap - More compact
     with row1[1]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("#### 🔥 Comorbidities Heatmap")
+        st.markdown("##### 🔥 Comorbidities")
         
         condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
         heat_df = filtered_df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
-        fig, ax = plt.subplots(figsize=(2.6, 2.3))
+        fig, ax = plt.subplots(figsize=(2.2, 1.8))
         sns.heatmap(heat_df, annot=True, cmap="Reds", fmt=".1f", ax=ax, cbar=True,
-                   annot_kws={"size": 11, "weight": "bold"}, cbar_kws={"shrink": 0.8})
-        ax.set_title("Comorbidities (%)", fontsize=12, pad=10)
+                   annot_kws={"size": 9, "weight": "bold"}, cbar_kws={"shrink": 0.7})
+        ax.set_title("Comorbidities (%)", fontsize=10, pad=5)
         ax.set_xlabel("")
         ax.set_ylabel("")
-        plt.xticks(fontsize=10)
-        plt.yticks(fontsize=10, rotation=0)
-        plt.tight_layout(pad=0.7)
+        plt.xticks(fontsize=8)
+        plt.yticks(fontsize=8, rotation=0)
+        plt.tight_layout(pad=0.3)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Gender Pie
+    # Gender Pie - More compact
     with row1[2]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("#### ⚧ Gender Distribution")
+        st.markdown("##### ⚧ Gender")
         
         if len(hd_df) > 0:
             gender_counts = hd_df["Sex"].value_counts()
             fig_gender = px.pie(names=gender_counts.index, values=gender_counts.values,
-                              hole=0.5, height=200, color_discrete_sequence=['#c92c6d', '#667eea'])
+                              hole=0.5, height=160, color_discrete_sequence=['#c92c6d', '#667eea'])
             fig_gender.update_traces(textinfo='label+percent', textposition='inside',
-                                   textfont_size=12, textfont_color='white')
-            fig_gender.update_layout(margin=dict(t=20, b=0, l=0, r=0), showlegend=False,
-                                   font=dict(size=12), title=dict(text="Heart Disease by Gender", x=0.5, font=dict(size=11)))
+                                   textfont_size=10, textfont_color='white')
+            fig_gender.update_layout(margin=dict(t=15, b=0, l=0, r=0), showlegend=False,
+                                   font=dict(size=10), title=dict(text="HD by Gender", x=0.5, font=dict(size=10)))
             st.plotly_chart(fig_gender, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -316,29 +275,29 @@ with tab1:
 
     with row2[0]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("#### 👥 Age Group Distribution")
+        st.markdown("##### 👥 Age Groups")
         
         if len(hd_df) > 0:
             age_counts = hd_df["AgeCategory"].value_counts().sort_index()
             fig_age = px.bar(x=age_counts.index, y=age_counts.values, color=age_counts.values,
-                           color_continuous_scale="Viridis", height=250, title="Heart Disease Cases by Age Group")
-            fig_age.update_layout(showlegend=False, font=dict(size=11), margin=dict(t=30, b=0, l=0, r=0),
-                                xaxis_title='Age Group', yaxis_title='Count', title_x=0.5)
+                           color_continuous_scale="Viridis", height=180, title="HD Cases by Age")
+            fig_age.update_layout(showlegend=False, font=dict(size=9), margin=dict(t=25, b=0, l=0, r=0),
+                                xaxis_title='Age Group', yaxis_title='Count', title_x=0.5, title_font_size=10)
             fig_age.update_traces(hovertemplate='<b>%{x}</b><br>Cases: %{y}<extra></extra>')
             st.plotly_chart(fig_age, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with row2[1]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("#### 🏥 General Health Status")
+        st.markdown("##### 🏥 Health Status")
         
         df_summary = filtered_df.groupby(['HeartDisease', 'GenHealth']).size().reset_index(name='count')
         if len(df_summary) > 0:
             df_summary['percent'] = df_summary.groupby('HeartDisease')['count'].transform(lambda x: x / x.sum() * 100)
             fig = px.bar(df_summary, x="GenHealth", y="percent", color="HeartDisease", barmode="group",
                         labels={"GenHealth": "General Health", "percent": "% of Group", "HeartDisease": "Heart Disease"},
-                        color_discrete_sequence=['#28a745', '#c92c6d'], height=250, title="Health Status Distribution")
-            fig.update_layout(font=dict(size=11), margin=dict(t=30, b=0, l=0, r=0), title_x=0.5)
+                        color_discrete_sequence=['#28a745', '#c92c6d'], height=180, title="Health Status")
+            fig.update_layout(font=dict(size=9), margin=dict(t=25, b=0, l=0, r=0), title_x=0.5, title_font_size=10)
             st.plotly_chart(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
