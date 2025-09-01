@@ -104,10 +104,11 @@ def load_data():
 
 df = load_data()
 
-# Main header - More compact
+# Main header - Restored with subtitle
 st.markdown("""
 <div class="main-header">
     <h1>❤️ Heart Disease Analytics Dashboard</h1>
+    <p style="margin-bottom: 0;">Comprehensive insights into cardiovascular health patterns</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -177,18 +178,18 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# KPI row - Very compact
+# KPI row - Restored balance with slight size adjustment
 if len(all_hd_df) > 0:
     st.markdown(f"""
     <div style='background: linear-gradient(90deg, #f7f7fa 0%, #e9ecef 100%); 
-                border-radius: 6px; padding: 0.5rem; margin-bottom: 0.8rem;
-                display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+                border-radius: 8px; padding: 0.8rem; margin-bottom: 1rem;
+                display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
                 border: 1px solid #dee2e6;'>
-        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">⚖️ BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
+        <span style="font-weight: 600; color: #495057;">⚖️ Avg BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
+        <span style="font-weight: 600; color: #495057;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -224,14 +225,14 @@ with tab1:
         })
         melt_df = risk_df.melt(id_vars="Risk Factor", value_vars=["Heart Disease", "No Heart Disease"],
                             var_name="HD", value_name="Prevalence (%)")
-        fig, ax = plt.subplots(figsize=(4.6, 2.1))
+        fig, ax = plt.subplots(figsize=(4.4, 2.0))
         sns.barplot(data=melt_df, x="Prevalence (%)", y="Risk Factor", hue="HD",
                    palette=["#e63946", "#457b9d"], orient="h")
-        ax.set_xlabel("Prevalence (%)", fontsize=9)
+        ax.set_xlabel("Prevalence (%)", fontsize=10)
         ax.set_ylabel("")
-        ax.set_title("Risk Factors Comparison", fontsize=10, pad=6)
-        ax.legend(fontsize=8, title='', loc='lower right')
-        plt.tight_layout(pad=0.4)
+        ax.set_title("Risk Factors Comparison", fontsize=11, pad=7)
+        ax.legend(fontsize=9, title='', loc='lower right')
+        plt.tight_layout(pad=0.5)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -242,19 +243,19 @@ with tab1:
         
         condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
         heat_df = filtered_df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
-        fig, ax = plt.subplots(figsize=(2.3, 1.9))
+        fig, ax = plt.subplots(figsize=(2.2, 1.8))
         sns.heatmap(heat_df, annot=True, cmap="Reds", fmt=".1f", ax=ax, cbar=True,
-                   annot_kws={"size": 9, "weight": "bold"}, cbar_kws={"shrink": 0.7})
-        ax.set_title("Comorbidities (%)", fontsize=10, pad=6)
+                   annot_kws={"size": 9, "weight": "bold"}, cbar_kws={"shrink": 0.75})
+        ax.set_title("Comorbidities (%)", fontsize=10, pad=7)
         ax.set_xlabel("")
         ax.set_ylabel("")
         plt.xticks(fontsize=8)
         plt.yticks(fontsize=8, rotation=0)
-        plt.tight_layout(pad=0.4)
+        plt.tight_layout(pad=0.5)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Gender Pie - More compact for one-page fit
+    # Gender Pie - Restored good size
     with row1[2]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
         st.markdown("#### ⚧ Gender")
@@ -262,11 +263,11 @@ with tab1:
         if len(hd_df) > 0:
             gender_counts = hd_df["Sex"].value_counts()
             fig_gender = px.pie(names=gender_counts.index, values=gender_counts.values,
-                              hole=0.5, height=165, color_discrete_sequence=['#c92c6d', '#667eea'])
+                              hole=0.5, height=160, color_discrete_sequence=['#c92c6d', '#667eea'])
             fig_gender.update_traces(textinfo='label+percent', textposition='inside',
-                                   textfont_size=10, textfont_color='white')
-            fig_gender.update_layout(margin=dict(t=15, b=0, l=0, r=0), showlegend=False,
-                                   font=dict(size=10), title=dict(text="HD by Gender", x=0.5, font=dict(size=9)))
+                                   textfont_size=11, textfont_color='white')
+            fig_gender.update_layout(margin=dict(t=18, b=0, l=0, r=0), showlegend=False,
+                                   font=dict(size=10), title=dict(text="HD by Gender", x=0.5, font=dict(size=10)))
             st.plotly_chart(fig_gender, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
