@@ -15,25 +15,25 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced CSS styling - Compact header
+# Enhanced CSS styling - Restored balance with size fix
 st.markdown("""
 <style>
     .main-header {
         background: linear-gradient(90deg, #b11f4a 0%, #e63946 100%);
-        padding: 0.6rem;
-        border-radius: 6px;
+        padding: 1rem;
+        border-radius: 10px;
         color: white;
         text-align: center;
-        margin-bottom: 0.8rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.2rem;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
     }
     .metric-container {
         background: linear-gradient(135deg, #f7f7fa 0%, #ffffff 100%);
-        border-radius: 6px;
-        padding: 0.6rem;
-        margin-bottom: 0.8rem;
+        border-radius: 8px;
+        padding: 0.8rem;
+        margin-bottom: 1rem;
         border: 1px solid #e0e0e0;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .filter-section {
         background: #667eea;
@@ -44,37 +44,37 @@ st.markdown("""
     }
     .chart-container {
         background: white;
-        padding: 0.6rem;
-        border-radius: 6px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-        margin-bottom: 0.6rem;
+        padding: 0.7rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        margin-bottom: 0.7rem;
     }
     html, body, [class*="css"]  {
         font-size: 13px !important;
         font-family: 'Segoe UI', 'Roboto', Arial, sans-serif !important;
     }
     .block-container {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
+        padding-left: 1.6rem;
+        padding-right: 1.6rem;
         max-width: 100%;
     }
     .stSelectbox > div > div {
         background-color: #f8f9fa;
     }
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 10px;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 35px;
-        padding: 0px 12px;
+        height: 36px;
+        padding: 0px 14px;
     }
-    h1 { font-size: 1.3rem !important; margin-bottom: 0.2rem !important; }
-    h2 { font-size: 1.1rem !important; margin-bottom: 0.2rem !important; }
-    h3 { font-size: 1rem !important; margin-bottom: 0.2rem !important; }
-    h4 { font-size: 0.95rem !important; margin-bottom: 0.2rem !important; }
-    h5 { font-size: 0.9rem !important; margin-bottom: 0.2rem !important; }
+    h1 { font-size: 1.4rem !important; margin-bottom: 0.25rem !important; }
+    h2 { font-size: 1.2rem !important; margin-bottom: 0.25rem !important; }
+    h3 { font-size: 1.1rem !important; margin-bottom: 0.25rem !important; }
+    h4 { font-size: 1.05rem !important; margin-bottom: 0.25rem !important; }
+    h5 { font-size: 1rem !important; margin-bottom: 0.25rem !important; }
 </style>
 """, unsafe_allow_html=True)
 
