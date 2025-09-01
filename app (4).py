@@ -15,66 +15,66 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced CSS styling - More compact
+# Enhanced CSS styling - Better balance
 st.markdown("""
 <style>
     .main-header {
         background: linear-gradient(90deg, #b11f4a 0%, #e63946 100%);
-        padding: 0.8rem;
-        border-radius: 10px;
+        padding: 1.2rem;
+        border-radius: 12px;
         color: white;
         text-align: center;
-        margin-bottom: 1rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
     }
     .metric-container {
         background: linear-gradient(135deg, #f7f7fa 0%, #ffffff 100%);
-        border-radius: 8px;
-        padding: 0.8rem;
-        margin-bottom: 1rem;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1.2rem;
         border: 1px solid #e0e0e0;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .filter-section {
         background: #667eea;
         color: white;
-        padding: 0.8rem;
+        padding: 1rem;
         border-radius: 8px;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
     }
     .chart-container {
         background: white;
-        padding: 0.5rem;
+        padding: 0.8rem;
         border-radius: 8px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-        margin-bottom: 0.5rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        margin-bottom: 0.8rem;
     }
     html, body, [class*="css"]  {
-        font-size: 12px !important;
+        font-size: 13px !important;
         font-family: 'Segoe UI', 'Roboto', Arial, sans-serif !important;
     }
     .block-container {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
+        padding-left: 1.8rem;
+        padding-right: 1.8rem;
         max-width: 100%;
     }
     .stSelectbox > div > div {
         background-color: #f8f9fa;
     }
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 10px;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 35px;
-        padding: 0px 12px;
+        height: 38px;
+        padding: 0px 16px;
     }
-    h1 { font-size: 1.4rem !important; margin-bottom: 0.2rem !important; }
-    h2 { font-size: 1.2rem !important; margin-bottom: 0.2rem !important; }
-    h3 { font-size: 1.1rem !important; margin-bottom: 0.2rem !important; }
-    h4 { font-size: 1rem !important; margin-bottom: 0.2rem !important; }
-    .metric-value { font-size: 1.2rem !important; }
+    h1 { font-size: 1.5rem !important; margin-bottom: 0.3rem !important; }
+    h2 { font-size: 1.3rem !important; margin-bottom: 0.3rem !important; }
+    h3 { font-size: 1.2rem !important; margin-bottom: 0.3rem !important; }
+    h4 { font-size: 1.1rem !important; margin-bottom: 0.3rem !important; }
+    h5 { font-size: 1rem !important; margin-bottom: 0.3rem !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -104,10 +104,11 @@ def load_data():
 
 df = load_data()
 
-# Main header - More compact
+# Main header - Better balance
 st.markdown("""
 <div class="main-header">
     <h1>❤️ Heart Disease Analytics Dashboard</h1>
+    <p style="margin-bottom: 0;">Comprehensive insights into cardiovascular health patterns</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -177,18 +178,18 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# KPI row - More compact
+# KPI row - Better balance
 if len(all_hd_df) > 0:
     st.markdown(f"""
     <div style='background: linear-gradient(90deg, #f7f7fa 0%, #e9ecef 100%); 
-                border-radius: 8px; padding: 0.8rem; margin-bottom: 1rem;
-                display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+                border-radius: 10px; padding: 1rem; margin-bottom: 1.2rem;
+                display: flex; justify-content: center; gap: 2.3rem; flex-wrap: wrap;
                 border: 1px solid #dee2e6;'>
-        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">⚖️ BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057; font-size: 0.9rem;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
+        <span style="font-weight: 600; color: #495057;">⚖️ Avg BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
+        <span style="font-weight: 600; color: #495057;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -199,10 +200,10 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Original Dashboard", "📈 Advance
 with tab1:
     row1 = st.columns([1.8, 1.2, 0.7], gap="medium")
 
-    # Risk Factors Bar - More compact
+    # Risk Factors Bar - Better balance
     with row1[0]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("##### 🎯 Risk Factors")
+        st.markdown("#### 🎯 Risk Factors")
         
         risk_factors = ["Smoking", "AlcoholDrinking", "Diabetic", "PhysicalActivity",
                        "Stroke", "DiffWalking", "Asthma", "KidneyDisease", "SkinCancer"]
@@ -224,49 +225,49 @@ with tab1:
         })
         melt_df = risk_df.melt(id_vars="Risk Factor", value_vars=["Heart Disease", "No Heart Disease"],
                             var_name="HD", value_name="Prevalence (%)")
-        fig, ax = plt.subplots(figsize=(4.5, 2))
+        fig, ax = plt.subplots(figsize=(4.8, 2.2))
         sns.barplot(data=melt_df, x="Prevalence (%)", y="Risk Factor", hue="HD",
                    palette=["#e63946", "#457b9d"], orient="h")
-        ax.set_xlabel("Prevalence (%)", fontsize=9)
+        ax.set_xlabel("Prevalence (%)", fontsize=10)
         ax.set_ylabel("")
-        ax.set_title("Risk Factors", fontsize=10, pad=5)
-        ax.legend(fontsize=8, title='', loc='lower right')
-        plt.tight_layout(pad=0.3)
+        ax.set_title("Risk Factors Comparison", fontsize=11, pad=8)
+        ax.legend(fontsize=9, title='', loc='lower right')
+        plt.tight_layout(pad=0.5)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Comorbidities Heatmap - More compact
+    # Comorbidities Heatmap - Better balance
     with row1[1]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("##### 🔥 Comorbidities")
+        st.markdown("#### 🔥 Comorbidities")
         
         condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
         heat_df = filtered_df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
-        fig, ax = plt.subplots(figsize=(2.2, 1.8))
+        fig, ax = plt.subplots(figsize=(2.4, 2))
         sns.heatmap(heat_df, annot=True, cmap="Reds", fmt=".1f", ax=ax, cbar=True,
-                   annot_kws={"size": 9, "weight": "bold"}, cbar_kws={"shrink": 0.7})
-        ax.set_title("Comorbidities (%)", fontsize=10, pad=5)
+                   annot_kws={"size": 10, "weight": "bold"}, cbar_kws={"shrink": 0.8})
+        ax.set_title("Comorbidities (%)", fontsize=11, pad=8)
         ax.set_xlabel("")
         ax.set_ylabel("")
-        plt.xticks(fontsize=8)
-        plt.yticks(fontsize=8, rotation=0)
-        plt.tight_layout(pad=0.3)
+        plt.xticks(fontsize=9)
+        plt.yticks(fontsize=9, rotation=0)
+        plt.tight_layout(pad=0.5)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Gender Pie - More compact
+    # Gender Pie - Better balance
     with row1[2]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("##### ⚧ Gender")
+        st.markdown("#### ⚧ Gender")
         
         if len(hd_df) > 0:
             gender_counts = hd_df["Sex"].value_counts()
             fig_gender = px.pie(names=gender_counts.index, values=gender_counts.values,
-                              hole=0.5, height=160, color_discrete_sequence=['#c92c6d', '#667eea'])
+                              hole=0.5, height=180, color_discrete_sequence=['#c92c6d', '#667eea'])
             fig_gender.update_traces(textinfo='label+percent', textposition='inside',
-                                   textfont_size=10, textfont_color='white')
-            fig_gender.update_layout(margin=dict(t=15, b=0, l=0, r=0), showlegend=False,
-                                   font=dict(size=10), title=dict(text="HD by Gender", x=0.5, font=dict(size=10)))
+                                   textfont_size=11, textfont_color='white')
+            fig_gender.update_layout(margin=dict(t=20, b=0, l=0, r=0), showlegend=False,
+                                   font=dict(size=11), title=dict(text="HD by Gender", x=0.5, font=dict(size=10)))
             st.plotly_chart(fig_gender, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -275,29 +276,29 @@ with tab1:
 
     with row2[0]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("##### 👥 Age Groups")
+        st.markdown("#### 👥 Age Groups")
         
         if len(hd_df) > 0:
             age_counts = hd_df["AgeCategory"].value_counts().sort_index()
             fig_age = px.bar(x=age_counts.index, y=age_counts.values, color=age_counts.values,
-                           color_continuous_scale="Viridis", height=180, title="HD Cases by Age")
-            fig_age.update_layout(showlegend=False, font=dict(size=9), margin=dict(t=25, b=0, l=0, r=0),
-                                xaxis_title='Age Group', yaxis_title='Count', title_x=0.5, title_font_size=10)
+                           color_continuous_scale="Viridis", height=210, title="HD Cases by Age")
+            fig_age.update_layout(showlegend=False, font=dict(size=10), margin=dict(t=30, b=0, l=0, r=0),
+                                xaxis_title='Age Group', yaxis_title='Count', title_x=0.5, title_font_size=11)
             fig_age.update_traces(hovertemplate='<b>%{x}</b><br>Cases: %{y}<extra></extra>')
             st.plotly_chart(fig_age, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with row2[1]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.markdown("##### 🏥 Health Status")
+        st.markdown("#### 🏥 Health Status")
         
         df_summary = filtered_df.groupby(['HeartDisease', 'GenHealth']).size().reset_index(name='count')
         if len(df_summary) > 0:
             df_summary['percent'] = df_summary.groupby('HeartDisease')['count'].transform(lambda x: x / x.sum() * 100)
             fig = px.bar(df_summary, x="GenHealth", y="percent", color="HeartDisease", barmode="group",
                         labels={"GenHealth": "General Health", "percent": "% of Group", "HeartDisease": "Heart Disease"},
-                        color_discrete_sequence=['#28a745', '#c92c6d'], height=180, title="Health Status")
-            fig.update_layout(font=dict(size=9), margin=dict(t=25, b=0, l=0, r=0), title_x=0.5, title_font_size=10)
+                        color_discrete_sequence=['#28a745', '#c92c6d'], height=210, title="Health Status")
+            fig.update_layout(font=dict(size=10), margin=dict(t=30, b=0, l=0, r=0), title_x=0.5, title_font_size=11)
             st.plotly_chart(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
