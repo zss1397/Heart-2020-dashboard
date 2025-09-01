@@ -15,25 +15,25 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced CSS styling - Better balance
+# Enhanced CSS styling - Compact header
 st.markdown("""
 <style>
     .main-header {
         background: linear-gradient(90deg, #b11f4a 0%, #e63946 100%);
-        padding: 1.2rem;
-        border-radius: 12px;
+        padding: 0.6rem;
+        border-radius: 6px;
         color: white;
         text-align: center;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0.8rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
     .metric-container {
         background: linear-gradient(135deg, #f7f7fa 0%, #ffffff 100%);
-        border-radius: 10px;
-        padding: 1rem;
-        margin-bottom: 1.2rem;
+        border-radius: 6px;
+        padding: 0.6rem;
+        margin-bottom: 0.8rem;
         border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     .filter-section {
         background: #667eea;
@@ -44,37 +44,37 @@ st.markdown("""
     }
     .chart-container {
         background: white;
-        padding: 0.8rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        margin-bottom: 0.8rem;
+        padding: 0.6rem;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        margin-bottom: 0.6rem;
     }
     html, body, [class*="css"]  {
         font-size: 13px !important;
         font-family: 'Segoe UI', 'Roboto', Arial, sans-serif !important;
     }
     .block-container {
-        padding-top: 0.8rem;
-        padding-bottom: 0.8rem;
-        padding-left: 1.8rem;
-        padding-right: 1.8rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         max-width: 100%;
     }
     .stSelectbox > div > div {
         background-color: #f8f9fa;
     }
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
+        gap: 8px;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 38px;
-        padding: 0px 16px;
+        height: 35px;
+        padding: 0px 12px;
     }
-    h1 { font-size: 1.5rem !important; margin-bottom: 0.3rem !important; }
-    h2 { font-size: 1.3rem !important; margin-bottom: 0.3rem !important; }
-    h3 { font-size: 1.2rem !important; margin-bottom: 0.3rem !important; }
-    h4 { font-size: 1.1rem !important; margin-bottom: 0.3rem !important; }
-    h5 { font-size: 1rem !important; margin-bottom: 0.3rem !important; }
+    h1 { font-size: 1.3rem !important; margin-bottom: 0.2rem !important; }
+    h2 { font-size: 1.1rem !important; margin-bottom: 0.2rem !important; }
+    h3 { font-size: 1rem !important; margin-bottom: 0.2rem !important; }
+    h4 { font-size: 0.95rem !important; margin-bottom: 0.2rem !important; }
+    h5 { font-size: 0.9rem !important; margin-bottom: 0.2rem !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -104,11 +104,10 @@ def load_data():
 
 df = load_data()
 
-# Main header - Better balance
+# Main header - More compact
 st.markdown("""
 <div class="main-header">
     <h1>❤️ Heart Disease Analytics Dashboard</h1>
-    <p style="margin-bottom: 0;">Comprehensive insights into cardiovascular health patterns</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -178,18 +177,18 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# KPI row - Better balance
+# KPI row - Very compact
 if len(all_hd_df) > 0:
     st.markdown(f"""
     <div style='background: linear-gradient(90deg, #f7f7fa 0%, #e9ecef 100%); 
-                border-radius: 10px; padding: 1rem; margin-bottom: 1.2rem;
-                display: flex; justify-content: center; gap: 2.3rem; flex-wrap: wrap;
+                border-radius: 6px; padding: 0.5rem; margin-bottom: 0.8rem;
+                display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
                 border: 1px solid #dee2e6;'>
-        <span style="font-weight: 600; color: #495057;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
-        <span style="font-weight: 600; color: #495057;">⚖️ Avg BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
-        <span style="font-weight: 600; color: #495057;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
-        <span style="font-weight: 600; color: #495057;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">❤️ <span style="color: #c92c6d;">{len(all_hd_df):,}</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">⚖️ BMI: <span style="color: #fd7e14;">{all_hd_df['BMI'].mean():.1f}</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">🚬 Smoking: <span style="color: #dc3545;">{(all_hd_df['Smoking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">🍺 Alcohol: <span style="color: #ffc107;">{(all_hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f}%</span></span>
+        <span style="font-weight: 600; color: #495057; font-size: 0.85rem;">🏃 Inactive: <span style="color: #6f42c1;">{(all_hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f}%</span></span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -225,14 +224,14 @@ with tab1:
         })
         melt_df = risk_df.melt(id_vars="Risk Factor", value_vars=["Heart Disease", "No Heart Disease"],
                             var_name="HD", value_name="Prevalence (%)")
-        fig, ax = plt.subplots(figsize=(4.8, 2.2))
+        fig, ax = plt.subplots(figsize=(4.6, 2.1))
         sns.barplot(data=melt_df, x="Prevalence (%)", y="Risk Factor", hue="HD",
                    palette=["#e63946", "#457b9d"], orient="h")
-        ax.set_xlabel("Prevalence (%)", fontsize=10)
+        ax.set_xlabel("Prevalence (%)", fontsize=9)
         ax.set_ylabel("")
-        ax.set_title("Risk Factors Comparison", fontsize=11, pad=8)
-        ax.legend(fontsize=9, title='', loc='lower right')
-        plt.tight_layout(pad=0.5)
+        ax.set_title("Risk Factors Comparison", fontsize=10, pad=6)
+        ax.legend(fontsize=8, title='', loc='lower right')
+        plt.tight_layout(pad=0.4)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -243,15 +242,15 @@ with tab1:
         
         condition_cols = ["Stroke", "Diabetic", "KidneyDisease", "Asthma"]
         heat_df = filtered_df.groupby("HeartDisease")[condition_cols].apply(lambda x: (x == "Yes").mean() * 100)
-        fig, ax = plt.subplots(figsize=(2.4, 2))
+        fig, ax = plt.subplots(figsize=(2.3, 1.9))
         sns.heatmap(heat_df, annot=True, cmap="Reds", fmt=".1f", ax=ax, cbar=True,
-                   annot_kws={"size": 10, "weight": "bold"}, cbar_kws={"shrink": 0.8})
-        ax.set_title("Comorbidities (%)", fontsize=11, pad=8)
+                   annot_kws={"size": 9, "weight": "bold"}, cbar_kws={"shrink": 0.7})
+        ax.set_title("Comorbidities (%)", fontsize=10, pad=6)
         ax.set_xlabel("")
         ax.set_ylabel("")
-        plt.xticks(fontsize=9)
-        plt.yticks(fontsize=9, rotation=0)
-        plt.tight_layout(pad=0.5)
+        plt.xticks(fontsize=8)
+        plt.yticks(fontsize=8, rotation=0)
+        plt.tight_layout(pad=0.4)
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
