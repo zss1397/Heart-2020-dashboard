@@ -255,7 +255,7 @@ with tab1:
         st.pyplot(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Gender Pie - Better balance
+    # Gender Pie - More compact for one-page fit
     with row1[2]:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
         st.markdown("#### ⚧ Gender")
@@ -263,11 +263,11 @@ with tab1:
         if len(hd_df) > 0:
             gender_counts = hd_df["Sex"].value_counts()
             fig_gender = px.pie(names=gender_counts.index, values=gender_counts.values,
-                              hole=0.5, height=180, color_discrete_sequence=['#c92c6d', '#667eea'])
+                              hole=0.5, height=165, color_discrete_sequence=['#c92c6d', '#667eea'])
             fig_gender.update_traces(textinfo='label+percent', textposition='inside',
-                                   textfont_size=11, textfont_color='white')
-            fig_gender.update_layout(margin=dict(t=20, b=0, l=0, r=0), showlegend=False,
-                                   font=dict(size=11), title=dict(text="HD by Gender", x=0.5, font=dict(size=10)))
+                                   textfont_size=10, textfont_color='white')
+            fig_gender.update_layout(margin=dict(t=15, b=0, l=0, r=0), showlegend=False,
+                                   font=dict(size=10), title=dict(text="HD by Gender", x=0.5, font=dict(size=9)))
             st.plotly_chart(fig_gender, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -281,9 +281,9 @@ with tab1:
         if len(hd_df) > 0:
             age_counts = hd_df["AgeCategory"].value_counts().sort_index()
             fig_age = px.bar(x=age_counts.index, y=age_counts.values, color=age_counts.values,
-                           color_continuous_scale="Viridis", height=210, title="HD Cases by Age")
-            fig_age.update_layout(showlegend=False, font=dict(size=10), margin=dict(t=30, b=0, l=0, r=0),
-                                xaxis_title='Age Group', yaxis_title='Count', title_x=0.5, title_font_size=11)
+                           color_continuous_scale="Viridis", height=190, title="HD Cases by Age")
+            fig_age.update_layout(showlegend=False, font=dict(size=9), margin=dict(t=25, b=5, l=5, r=5),
+                                xaxis_title='Age Group', yaxis_title='Count', title_x=0.5, title_font_size=10)
             fig_age.update_traces(hovertemplate='<b>%{x}</b><br>Cases: %{y}<extra></extra>')
             st.plotly_chart(fig_age, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -297,8 +297,8 @@ with tab1:
             df_summary['percent'] = df_summary.groupby('HeartDisease')['count'].transform(lambda x: x / x.sum() * 100)
             fig = px.bar(df_summary, x="GenHealth", y="percent", color="HeartDisease", barmode="group",
                         labels={"GenHealth": "General Health", "percent": "% of Group", "HeartDisease": "Heart Disease"},
-                        color_discrete_sequence=['#28a745', '#c92c6d'], height=210, title="Health Status")
-            fig.update_layout(font=dict(size=10), margin=dict(t=30, b=0, l=0, r=0), title_x=0.5, title_font_size=11)
+                        color_discrete_sequence=['#28a745', '#c92c6d'], height=190, title="Health Status")
+            fig.update_layout(font=dict(size=9), margin=dict(t=25, b=5, l=5, r=5), title_x=0.5, title_font_size=10)
             st.plotly_chart(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
