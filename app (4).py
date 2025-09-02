@@ -157,43 +157,53 @@ if len(filtered_df) == 0:
     st.error("No data matches filters.")
     st.stop()
 
+# Calculate KPI values safely
+total_pop = len(filtered_df)
+hd_cases = len(hd_df)
+healthy_cases = len(nhd_df)
+hd_rate = (hd_cases / total_pop * 100) if total_pop > 0 else 0
+
+# Heart disease specific metrics
+avg_bmi_hd = hd_df['BMI'].mean() if len(hd_df) > 0 else 0
+smoking_rate_hd = (hd_df['Smoking'] == 'Yes').mean() * 100 if len(hd_df) > 0 else 0
+alcohol_rate_hd = (hd_df['AlcoholDrinking'] == 'Yes').mean() * 100 if len(hd_df) > 0 else 0
+inactive_rate_hd = (hd_df['PhysicalActivity'] == 'No').mean() * 100 if len(hd_df) > 0 else 0
+
 # Single comprehensive KPI row
 st.markdown(f"""
 <div class="kpi-container">
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #0a58ca;">{len(filtered_df):,}</h3>
+        <h3 class="kpi-value" style="color: #0a58ca;">{total_pop:,}</h3>
         <p class="kpi-label">👥 Total Population</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #c92c6d;">{len(hd_df):,}</h3>
+        <h3 class="kpi-value" style="color: #c92c6d;">{hd_cases:,}</h3>
         <p class="kpi-label">❤️ Heart Disease</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #28a745;">{len(nhd_df):,}</h3>
+        <h3 class="kpi-value" style="color: #28a745;">{healthy_cases:,}</h3>
         <p class="kpi-label">💚 Healthy</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #fd7e14;">{(len(hd_df)/len(filtered_df)*100):.1f}%</h3>
+        <h3 class="kpi-value" style="color: #fd7e14;">{hd_rate:.1f}%</h3>
         <p class="kpi-label">📈 HD Rate</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #6f42c1;">{hd_df['BMI'].mean():.1f if len(hd_df) > 0 else 0}</h3>
+        <h3 class="kpi-value" style="color: #6f42c1;">{avg_bmi_hd:.1f}</h3>
         <p class="kpi-label">⚖️ Avg BMI (HD)</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #dc3545;">{(hd_df['Smoking'] == 'Yes').mean() * 100:.1f if len(hd_df) > 0 else 0}%</h3>
+        <h3 class="kpi-value" style="color: #dc3545;">{smoking_rate_hd:.1f}%</h3>
         <p class="kpi-label">🚬 Smoking (HD)</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #ffc107;">{(hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f if len(hd_df) > 0 else 0}%</h3>
+        <h3 class="kpi-value" style="color: #ffc107;">{alcohol_rate_hd:.1f}%</h3>
         <p class="kpi-label">🍺 Alcohol (HD)</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #17a2b8;">{(hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f if len(hd_df) > 0 else 0}%</h3>
+        <h3 class="kpi-value" style="color: #17a2b8;">{inactive_rate_hd:.1f}%</h3>
         <p class="kpi-label">🏃 Inactive (HD)</p>
     </div>
-</div>
-""", unsafe_allow_html=True)
 
 # Main dashboard in a single row - compact layout
 col1, col2, col3, col4 = st.columns([2.2, 1.3, 1, 1.5], gap="small")
