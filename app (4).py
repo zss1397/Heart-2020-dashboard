@@ -181,15 +181,15 @@ st.markdown(f"""
         <p class="kpi-label">⚖️ Avg BMI (HD)</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #dc3545;">{((hd_df['Smoking'] == 'Yes').mean() * 100):.1f}% if len(hd_df) > 0 else 0</h3>
+        <h3 class="kpi-value" style="color: #dc3545;">{(hd_df['Smoking'] == 'Yes').mean() * 100:.1f if len(hd_df) > 0 else 0}%</h3>
         <p class="kpi-label">🚬 Smoking (HD)</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #ffc107;">{((hd_df['AlcoholDrinking'] == 'Yes').mean() * 100):.1f}% if len(hd_df) > 0 else 0</h3>
+        <h3 class="kpi-value" style="color: #ffc107;">{(hd_df['AlcoholDrinking'] == 'Yes').mean() * 100:.1f if len(hd_df) > 0 else 0}%</h3>
         <p class="kpi-label">🍺 Alcohol (HD)</p>
     </div>
     <div class="kpi-item">
-        <h3 class="kpi-value" style="color: #17a2b8;">{((hd_df['PhysicalActivity'] == 'No').mean() * 100):.1f}% if len(hd_df) > 0 else 0</h3>
+        <h3 class="kpi-value" style="color: #17a2b8;">{(hd_df['PhysicalActivity'] == 'No').mean() * 100:.1f if len(hd_df) > 0 else 0}%</h3>
         <p class="kpi-label">🏃 Inactive (HD)</p>
     </div>
 </div>
